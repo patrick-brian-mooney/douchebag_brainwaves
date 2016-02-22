@@ -10,7 +10,8 @@ Github repo:
     https://github.com/patrick-brian-mooney/douchebag_brainwaves
 """
 
-import random, pprint, sys
+import random, pprint, sys, json, urllib, requests
+from urllib.request import urlopen
 
 import nltk             # http://www.nltk.org/; sudo pip install -U nltk
 
@@ -26,6 +27,7 @@ from sentence_generator import *                            # https://github.com
 main_chains_file            = '/DouchebagBrainwaves/essays/graham.3.pkl'
 title_chains_file           = '/DouchebagBrainwaves/essays/titles.1.pkl'
 actual_graham_titles_path   = '/DouchebagBrainwaves/essays/titles.txt'
+gratitude_path              = '/DouchebagBrainwaves/essays/gratitude.txt'
 
 normal_tags = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
 brainwave_length = random.choice(list(range(8, 16)))
@@ -65,13 +67,16 @@ def get_a_title(the_brainwave):
     possible_titles = [
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: 'REASONS WHY STARTUPS FAIL',
-      lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1],
-      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1],
-      lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave).upper(),
-      lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave).upper(),
+      lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
+      lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
+      lambda: "WHAT'S WRONG THESE DAYS WITH %s" % get_a_noun(the_brainwave),
+      lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
+      lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
       lambda: get_fake_graham_title()
     ]
-    return random.choice(possible_titles)()
+    return random.choice(possible_titles)().upper()
 
 def get_some_tags(the_brainwave):
     """Gets some random tags to add to the standard tags."""
@@ -87,6 +92,28 @@ def get_some_tags(the_brainwave):
     tags = ', '.join(random.sample(alphanumeric, how_many))
     return tags
 
+def get_thanks():
+    """Get a set of credits for people who helped Virtual Paul Graham to write this set of thoughts"""
+    wp_specials = ('Special:', 'Wikipedia:', 'Category:', 'Template:', 'File:', 'Help:', 'Portal:', 'User:',
+        'MediaWiki:', 'Book:', 'Draft:', 'Education Program:', 'TimedText:', 'Module:', 'Gadget:', 'Topic:')
+    # First, get a list of people who were actually thanked by actual Paul Graham
+    with open(gratitude_path) as gratitude_file:
+        actually_thanked_by_graham = [ the_person.strip() for the_person in gratitude_file.readlines() ]
+    
+    # OK, now get a list of (previously) hot topics
+    wp_response = urlopen('http://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2015/10/10')
+    wp_data = wp_response.read().decode()
+    wp_dict = json.loads(wp_data)
+    wp_articles = [ wp_dict['items'][0]['articles'][x]['article'] for x in range(len(wp_dict['items'][0]['articles'])) ]
+    real_wp_articles = [x.replace('_', ' ') for x in wp_articles if not x.startswith(wp_specials)]
+    
+    grateful_to = list(set(random.sample(actually_thanked_by_graham + real_wp_articles, random.randint(3,10))))
+
+    ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
+    ret = ret + ' ' + random.choice(['for their feedback on these thoughts.', 'for inviting me to speak.',
+       'for reading a previous draft.'])
+    return ret
+
 if __name__ == "__main__":
     patrick_logger.log_it("INFO: Everything's set up, let's go...")
 
@@ -96,6 +123,9 @@ if __name__ == "__main__":
 
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
+    
+    if random.random() <= 1 / 3:
+        the_brainwave = the_brainwave + '\n\n' + get_thanks()
 
     the_status = social_media.tumblr_text_post(douchebag_brainwaves_client, normal_tags + get_some_tags(the_brainwave), the_title, the_brainwave)
     patrick_logger.log_it('INFO: the_status is: ' + pprint.pformat(the_status), 2)
