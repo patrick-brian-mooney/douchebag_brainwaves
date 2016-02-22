@@ -43,7 +43,7 @@ def get_fake_graham_title():
     with open(actual_graham_titles_path) as actual_graham_titles_file:
         actual_graham_titles = actual_graham_titles_file.read()
     title_m_length, title_starts, title_mapping = read_chains(title_chains_file)
-    while not ret in actual_graham_titles:
+    while ret in actual_graham_titles:
         ret = gen_text(title_mapping, title_starts, markov_length=title_m_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
     return ret
 
