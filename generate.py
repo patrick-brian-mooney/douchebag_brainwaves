@@ -28,11 +28,11 @@ main_chains_file            = '/DouchebagBrainwaves/essays/graham.3.pkl'
 title_chains_file           = '/DouchebagBrainwaves/essays/titles.1.pkl'
 actual_graham_titles_path   = '/DouchebagBrainwaves/essays/titles.txt'
 gratitude_path              = '/DouchebagBrainwaves/essays/gratitude.txt'
+notes_chains_file           = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
 normal_tags = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
-brainwave_length = random.choice(list(range(8, 16)))
 patrick_logger.verbosity_level = 2
-the_content = ''
+the_brainwave = ''
 
 the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
 
@@ -92,6 +92,15 @@ def get_some_tags(the_brainwave):
     tags = ', '.join(random.sample(alphanumeric, how_many))
     return tags
 
+def get_notes():
+    """Get a set of notes for the end of the essay."""
+    notes_m_length, notes_starts, notes_mapping = read_chains(notes_chains_file)
+    ret = "<p>Notes</p>\n<ol>\n"
+    for which_note in range(random.randint(1,15)):
+        ret = ret + '<li>%s</li>\n' % gen_text(notes_mapping, notes_starts, notes_m_length, random.randint(1, 4), paragraph_break_probability=0)
+    ret = ret + "</ol>\n"
+    return ret
+
 def get_thanks():
     """Get a set of credits for people who helped Virtual Paul Graham to write this set of thoughts"""
     wp_specials = ('Special:', 'Wikipedia:', 'Category:', 'Template:', 'File:', 'Help:', 'Portal:', 'User:',
@@ -117,17 +126,28 @@ def get_thanks():
 if __name__ == "__main__":
     patrick_logger.log_it("INFO: Everything's set up, let's go...")
 
-    patrick_logger.log_it('INFO: Getting %d sentences.' % brainwave_length)
-    the_brainwave = gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=brainwave_length, paragraph_break_probability=0)
-    patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
+    for which_para in range(random.randint(2,8)):
+        paragraph_length = random.choice(list(range(7, 12)))
+        patrick_logger.log_it('INFO: Getting %d sentences.' % paragraph_length)
+        the_brainwave = the_brainwave + gen_text(the_mapping, the_starts, the_markov_length, paragraph_length, paragraph_break_probability=0) + '\n'
 
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
+    if True:
+        """if random.random() <= .45:"""
+        the_brainwave = the_brainwave + '\n' + get_notes()
+    
     if random.random() <= 1 / 3:
-        the_brainwave = the_brainwave + '\n\n' + get_thanks()
+        the_brainwave = the_brainwave + '\n' + get_thanks()
 
-    the_status = social_media.tumblr_text_post(douchebag_brainwaves_client, normal_tags + get_some_tags(the_brainwave), the_title, the_brainwave)
+    patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
+    
+    brainwave_tags = normal_tags + get_some_tags(the_brainwave)
+    patrick_logger.log_it('INFO: tags are: %s' % brainwave_tags, 2)
+
+    the_brainwave = '\n'.join([ '<p>%s</p>' % x if not x.strip().startswith('<') else x for x in the_brainwave.split('\n') ])
+    the_status = social_media.tumblr_text_post(douchebag_brainwaves_client, brainwave_tags, the_title, the_brainwave)
     patrick_logger.log_it('INFO: the_status is: ' + pprint.pformat(the_status), 2)
 
     patrick_logger.log_it('INFO: We\'re done', 2)
