@@ -43,7 +43,7 @@ def get_fake_graham_title():
     with open(actual_graham_titles_path) as actual_graham_titles_file:
         actual_graham_titles = actual_graham_titles_file.read()
     title_m_length, title_starts, title_mapping = read_chains(title_chains_file)
-    while ret in actual_graham_titles:
+    while ''.join([x for x in ret.lower() if x.isalnum()]) in ''.join([x for x in actual_graham_titles.lower() if x.isalnum()]):
         ret = gen_text(title_mapping, title_starts, markov_length=title_m_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
     return ret
 
@@ -67,6 +67,8 @@ def get_a_title(the_brainwave):
     possible_titles = [
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: 'REASONS WHY STARTUPS FAIL',
+      lambda: 'THE COURAGE OF %s' % get_a_noun(the_brainwave),
+      lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
