@@ -37,6 +37,14 @@ the_brainwave = ''
 the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
 
 
+def get_a_noun(the_brainwave):
+    """Get a random noun that appears in the text"""
+    tokens = nltk.word_tokenize(the_brainwave)
+    tagged = nltk.pos_tag(tokens)
+    nouns = [word for word,pos in tagged if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS')]
+    alphanumeric = [word for word in nouns if word.isalnum()]
+    return random.choice(alphanumeric)
+
 def get_fake_graham_title():
     """Generate a fake title based on the corpus only of Graham's titles; reject it if it's an actual Graham title."""
     ret = "Apple's Mistake"     # Start with a title that IS in Graham's list of titles.
@@ -47,35 +55,31 @@ def get_fake_graham_title():
         ret = gen_text(title_mapping, title_starts, markov_length=title_m_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
     return ret
 
-def get_a_noun(the_brainwave):
-    """Get a random noun that appears in the text"""
-    tokens = nltk.word_tokenize(the_brainwave)
-    tagged = nltk.pos_tag(tokens)
-    nouns = [word for word,pos in tagged if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS')]
-    alphanumeric = [word for word in nouns if word.isalnum()]
-    return random.choice(alphanumeric)
-
 def get_a_title(the_brainwave):
-    """Gets a title for this particular Paul Graham-style brainwave"""
+    """Gets a title for this particular Paul Graham-style brainwave."""
     possible_topical_starts = [
       ['startups', 'VC', 'startup', 'VCs', 'entrepreneur', 'entrepreneurship', 'vision', 'drive', 'commitment'],
       ['Lisp', 'Arc', 'programming', 'C++', 'coding', 'ALGOL', 'Pascal', 'Python', 'FORTRAN'],
       ['women', 'woman', 'sexism', 'sexist', 'discrimination', 'power', 'girls', 'females', 'female', 'patriarchy']
     ]
     topical_starts = random.choice(possible_topical_starts)
-
-    possible_titles = [
+    
+    """Previous titles, no longer in use:
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: 'REASONS WHY STARTUPS FAIL',
+      lambda: "WHAT'S WRONG THESE DAYS WITH %s" % get_a_noun(the_brainwave),
+      lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
+    """
+    possible_titles = [
       lambda: 'THE COURAGE OF %s' % get_a_noun(the_brainwave),
       lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
       lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
-      lambda: "WHAT'S WRONG THESE DAYS WITH %s" % get_a_noun(the_brainwave),
       lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
-      lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
+      lambda: get_fake_graham_title(),
+      lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title()
     ]
     return random.choice(possible_titles)().upper()
@@ -112,6 +116,8 @@ def get_thanks():
         actually_thanked_by_graham = [ the_person.strip() for the_person in gratitude_file.readlines() ]
     
     # OK, now get a list of (previously) hot topics
+    # Seems that 1 August 2015 is the first day for which this API returns data. I'm OK with not looking at the 31st of any month. 
+    which_date = '2015/%02d/%02d/' % (random.randint(8,12), random.randint(1,30))
     wp_response = urlopen('http://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2015/10/10')
     wp_data = wp_response.read().decode()
     wp_dict = json.loads(wp_data)
