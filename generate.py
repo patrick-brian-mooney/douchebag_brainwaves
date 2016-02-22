@@ -134,8 +134,7 @@ if __name__ == "__main__":
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
-    if True:
-        """if random.random() <= .45:"""
+    if random.random() <= .45:
         the_brainwave = the_brainwave + '\n' + get_notes()
     
     if random.random() <= 1 / 3:
