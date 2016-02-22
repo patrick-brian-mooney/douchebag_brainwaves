@@ -23,14 +23,27 @@ from sentence_generator import *                            # https://github.com
 
 
 # Parameter declarations
+main_chains_file            = '/DouchebagBrainwaves/essays/graham.3.pkl'
+title_chains_file           = '/DouchebagBrainwaves/essays/titles.1.pkl'
+actual_graham_titles_path   = '/DouchebagBrainwaves/essays/titles.txt'
+
 normal_tags = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
 brainwave_length = random.choice(list(range(8, 16)))
-the_content = ''
 patrick_logger.verbosity_level = 2
-chains_file = '/DouchebagBrainwaves/essays/graham.3.pkl'
+the_content = ''
 
-the_markov_length, the_starts, the_mapping = read_chains(chains_file)
+the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
 
+
+def get_fake_graham_title():
+    """Generate a fake title based on the corpus only of Graham's titles; reject it if it's an actual Graham title."""
+    ret = "Apple's Mistake"     # Start with a title that IS in Graham's list of titles.
+    with open(actual_graham_titles_path) as actual_graham_titles_file:
+        actual_graham_titles = actual_graham_titles_file.read()
+    title_m_length, title_starts, title_mapping = read_chains(title_chains_file)
+    while not ret in actual_graham_titles:
+        ret = gen_text(title_mapping, title_starts, markov_length=title_m_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
+    return ret
 
 def get_a_noun(the_brainwave):
     """Get a random noun that appears in the text"""
@@ -44,8 +57,8 @@ def get_a_title(the_brainwave):
     """Gets a title for this particular Paul Graham-style brainwave"""
     possible_topical_starts = [
       ['startups', 'VC', 'startup', 'VCs', 'entrepreneur', 'entrepreneurship', 'vision', 'drive', 'commitment'],
-      ['LISP', 'Arc', 'programming', 'coding', 'ALGOL', 'Pascal', 'Python', 'FORTRAN'],
-      ['women', 'woman', 'sexism', 'discrimination', 'power', 'girls', 'females', 'female', 'patriarchy']
+      ['Lisp', 'Arc', 'programming', 'C++', 'coding', 'ALGOL', 'Pascal', 'Python', 'FORTRAN'],
+      ['women', 'woman', 'sexism', 'sexist', 'discrimination', 'power', 'girls', 'females', 'female', 'patriarchy']
     ]
     topical_starts = random.choice(possible_topical_starts)
 
@@ -55,7 +68,8 @@ def get_a_title(the_brainwave):
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave).upper(),
-      lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave).upper()
+      lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave).upper(),
+      lambda: get_fake_graham_title()
     ]
     return random.choice(possible_titles)()
 
