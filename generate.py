@@ -36,6 +36,39 @@ the_brainwave = ''
 
 the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
 
+# Here's a list of 30 topics that MALLET found in Paul Graham's essays, with pruning of some common words that slipped through.
+graham_topics = [
+   ['founders', 'thing', 'number', 'change', 'VCs', 'person', 'running', 'yahoo', 'source', 'stop', 'advantage', 'force', 'friend', 'worse', 'current', 'practice', 'news', 'wait', 'treat', 'Perl'],
+   ['software', 'means', 'back', 'design', 'VCs', 'end', 'realize', 'round', 'simply', 'funding', 'life', 'remember', 'quality', 'focus', 'process', 'biggest', 'succeed', 'fail', 'American'],
+   ['language', 'real', 'spam', 'matter', 'computer', 'stock', 'office', 'easier', 'form', 'guys', 'figure', 'ambitious', 'students', 'price', 'difference', 'building', 'days', 'open', 'books'],
+   ['inside', 'die', 'granted', 'derived', 'probabilities', 'carefully', 'convinced', 'increases', 'Cambridge', 'meet', 'artist', 'macro', 'naive', 'west', 'corpus', 'paragraph', 'pinch', 'estimate'],
+   ['people', 'startup', 'make', 'things', 'investors', 'time', 'lot', 'hard', 'writing', 'reason', 'problems', 'technology', 'give', 'programmers', 'day', 'rich', 'feel'],
+   ['start', 'business', 'years', 'kind', 'making', 'languages', 'valley', 'power', 'future', 'year', 'combinator', 'fundraising', 'imagine', 'general', 'hacker', 'approach', 'happened', 'century'],
+   ['company', 'companies', 'problem', 'world', 'bad', 'fact', 'small', 'starting', 'early', 'deal', 'wealth', 'word', 'applications', 'buy', 'worth', 'stuff'],
+   ['plan', 'pretty', 'Viaweb', 'huge', 'risk', 'default', 'meetings', 'principle', 'grew', 'thing', 'room', 'surprisingly', 'conventional', 'related', 'succeeding', 'complex', 'papers', 'slow'],
+   ['ideas', 'write', 'tend', 'interesting', 'found', 'half', 'young', 'user', 'research', 'decide', 'head', 'hire', 'increasingly', 'gradually', 'bought', 'Java', 'city', 'promising'],
+   ['sales', 'earlier', 'beat', 'street', 'draw', 'account', 'network', 'replace', 'technological', 'responsibility', 'regard', 'enjoy', 'human', 'iPhone', 'killed', 'continue', 'selection', 'eliminate', 'cap', 'widely'],
+   ['work', 'big', 'important', 'makes', 'market', 'code', 'common', 'invest', 'web', 'times', 'sense', 'run', 'investor', 'angel', 'spend', 'true', 'wrong'],
+   ['made', 'programming', 'type', 'live', 'choose', 'control', 'effect', 'public', 'groups', 'lots', 'dollars', 'hope', 'development', 'summer', 'performance', 'felt', 'began', 'growing', 'sitting', 'prefer'],
+   ['startups', 'good', 'money', 'users', 'working', 'great', 'school', 'long', 'point', 'Google', 'talk', 'successful', 'job'],
+   ['short', 'launch', 'feels', 'fear', 'student', 'agree', 'identical', 'disagree', 'systems', 'procrastination', 'prestigious', 'bug', 'larger', 'survive', 'mode', 'browser', 'server-based', 'influence', 'twenties'],
+   ['act', 'store', 'fine', 'typical', 'national', 'format', 'security', 'future', 'unions', 'coast', 'pattern', 'texts', 'sell', 'minds', 'exception', 'twenty', 'intrinsically', 'benevolent', 'salary', 'lunch'],
+   ['Steve', 'property', 'brand', 'drive', 'bank', 'amounts', 'David', 'tells', 'yields', 'blogging', 'editors', 'statement', 'decreasing', 'developers', 'planned', 'unexpected', 'zero-sum', 'spot', 'concentrated', 'ran'],
+   ['hour', 'losing', 'empirically', 'worry', 'fraction', 'generating', 'automatically', 'community', 'sending', 'applied', 'internal', 'developed', 'moved', 'definition', 'recruiting', 'Javascript', 'Amazon', 'feet', 'interview'],
+   ['idea', 'hackers', 'thought', 'smart', 'pay', 'question', 'case', 'powerful', 'till', 'raise', 'fast', 'couple', 'high', 'talking', 'care', 'win', 'words', 'avoid'],
+   ['demand', 'stores', 'page', 'suddenly', 'fairly', 'pushing', 'desperate', 'strongly', 'doctor', 'generates', 'extract', 'reality', 'start', 'Kerry', 'mails', 'accept', 'startups', 'standing', 'equation', 'norm'],
+   ['reporters', 'literature', 'software', 'long', 'definite', 'ancient', 'familiar', 'measuring', 'throwaway', 'earliest', 'imitating', 'pleasure', 'distinct', 'vote', 'fundamental', 'leaders', 'breaking', 'brain', 'pays', 'origins'],
+   ['considered', 'front', 'designing', 'finding', 'brain', 'previous', 'meaning', 'background', 'cheaply', 'awkward', 'external', 'graduate', 'miss', 'eating', 'election', 'story', 'noticed', 'sentences', 'made', 'seats'],
+   ['computers', 'phone', 'evil', 'regular', 'manage', 'speak', 'corporate', 'intended', 'worried', 'surely', 'built', 'parallel', 'author', 'shot', 'wisdom', 'areas', 'mobile', 'Sam', 'mathematicians'],
+   ['investment', 'experience', 'situations', 'ahead', 'page', 'industrial', 'equal', 'fashions', 'sophisticated', 'trust', 'practice', 'unlike', 'assumption', 'Einstein', 'Python', 'disputes', 'nervous', 'believing'],
+   ['structure', 'hit', 'changing', 'perfect', 'function', 'organization', 'insiders', 'task', 'advise', 'shares', 'lazy', 'cofounder', 'object-oriented', 'quiet', 'collection', 'defining', 'prototype', 'union', 'depending', 'combine'],
+   ['university', 'outcome', 'versions', 'strange', 'implement', 'screen', 'hierarchy', 'counterintuitive', 'Aristotle', 'stripe', 'intellectually', 'quit', 'developer', 'limits', 'modern', 'rapid', 'stages', 'statistics', 'executive', 'lead'],
+   ['venture', 'meet', 'novels', 'ugly', 'admissions', 'leaving', 'involved', 'innocent', 'revolution', 'clients', 'text', 'suggest', 'fragmentation', 'balance', 'attacking', 'attractive', 'overlap', 'Artix', 'Cambridge', 'energetic'],
+   ['support', 'depends', 'death', 'option', 'positives', 'benefit', 'lead', 'desire', 'prices', 'theoretical', 'rational', 'compare', 'develop', 'conceal', 'discard', 'hub', 'lying', 'every', 'paperwork', 'find'],
+   ['learning', 'determined', 'basic', 'edge', 'local', 'aim', 'direct', 'possibly', 'hundreds', 'exercise', 'products', 'inevitable', 'bias', 'alternative', 'constant', 'existence', 'environment', 'detail', 'degrees', 'manager'],
+   ['find', 'started', 'large', 'ago', 'site', 'data', 'experience', 'life', 'field', 'surprising', 'reasons', 'works', 'product', 'potential', 'math', 'technical', 'reading', 'save', 'turns', 'weeks'],
+   ['fund', 'essay', 'writers', 'living', 'prevent', 'rapidly', 'philosophy', 'level', 'syntax', 'factor', 'check', 'mind', 'topic', 'career', 'batch', 'secret', 'conference', 'behavior', 'influenced', 'technologies']
+]
 
 def get_a_noun(the_brainwave):
     """Get a random noun that appears in the text"""
@@ -57,12 +90,7 @@ def get_fake_graham_title():
 
 def get_a_title(the_brainwave):
     """Gets a title for this particular Paul Graham-style brainwave."""
-    possible_topical_starts = [
-      ['startups', 'VC', 'startup', 'VCs', 'entrepreneur', 'entrepreneurship', 'vision', 'drive', 'commitment'],
-      ['Lisp', 'Arc', 'programming', 'C++', 'coding', 'ALGOL', 'Pascal', 'Python', 'FORTRAN'],
-      ['women', 'woman', 'sexism', 'sexist', 'discrimination', 'power', 'girls', 'females', 'female', 'patriarchy']
-    ]
-    topical_starts = random.choice(possible_topical_starts)
+    topical_starts = random.choice(graham_topics)
     
     """Previous titles, no longer in use:
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
@@ -75,9 +103,13 @@ def get_a_title(the_brainwave):
       lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
       lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
       lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
+      lambda: get_fake_graham_title(),
+      lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title()
