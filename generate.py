@@ -24,16 +24,20 @@ from sentence_generator import *                            # https://github.com
 
 
 # Parameter declarations
-main_chains_file            = '/DouchebagBrainwaves/essays/graham.3.pkl'
-title_chains_file           = '/DouchebagBrainwaves/essays/titles.1.pkl'
-actual_graham_titles_path   = '/DouchebagBrainwaves/essays/titles.txt'
-gratitude_path              = '/DouchebagBrainwaves/essays/gratitude.txt'
-notes_chains_file           = '/DouchebagBrainwaves/essays/notes.2.pkl'
+normal_tags                     = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
+patrick_logger.verbosity_level  = 3
+the_brainwave                   = ''
+force_gratitude                 = False
+force_notes                     = False
 
-normal_tags = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
-patrick_logger.verbosity_level = 2
-the_brainwave = ''
+#File locations
+main_chains_file                = '/DouchebagBrainwaves/essays/graham.3.pkl'
+title_chains_file               = '/DouchebagBrainwaves/essays/titles.1.pkl'
+actual_graham_titles_path       = '/DouchebagBrainwaves/essays/titles.txt'
+gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
+notes_chains_file               = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
+# OK, read the primary chains into memory
 the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
 
 # Here's a list of 30 topics that MALLET found in Paul Graham's essays, with pruning of some common words that slipped through.
@@ -107,6 +111,7 @@ def get_a_title(the_brainwave):
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
       lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
+      lambda: "WORK ETHIC AND %s" % get_a_noun(the_brainwave),
       lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
@@ -146,21 +151,29 @@ def get_thanks():
     # First, get a list of people who were actually thanked by actual Paul Graham
     with open(gratitude_path) as gratitude_file:
         actually_thanked_by_graham = [ the_person.strip() for the_person in gratitude_file.readlines() ]
+    patrick_logger.log_it('INFO: OK, we loaded the list of people Paul Graham has actually thanked.', 3)
     
     # OK, now get a list of (previously) hot topics
     # Seems that 1 August 2015 is the first day for which this API returns data. I'm OK with not looking at the 31st of any month. 
-    which_date = '2015/%02d/%02d/' % (random.randint(8,12), random.randint(1,30))
-    wp_response = urlopen('http://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2015/10/10')
-    wp_data = wp_response.read().decode()
-    wp_dict = json.loads(wp_data)
-    wp_articles = [ wp_dict['items'][0]['articles'][x]['article'] for x in range(len(wp_dict['items'][0]['articles'])) ]
-    real_wp_articles = [x.replace('_', ' ') for x in wp_articles if not x.startswith(wp_specials)]
+    try:
+        which_date = '2015/%02d/%02d/' % (random.randint(8,12), random.randint(1,30))
+        patrick_logger.log_it("INFO: we're loading nouns from Wikipedia's top 1000 articles from %s" % which_date, 3)
+        wp_response = urlopen('http://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2015/10/10/' % which_date)
+        wp_data = wp_response.read().decode()
+        wp_dict = json.loads(wp_data)
+        patrick_logger.log_it("INFO: we loaded and parsed the relevant JSON data from Wikipedia.", 3)
+        wp_articles = [ wp_dict['items'][0]['articles'][x]['article'] for x in range(len(wp_dict['items'][0]['articles'])) ]
+        real_wp_articles = [x.replace('_', ' ') for x in wp_articles if not x.startswith(wp_specials)]
+        patrick_logger.log_it("INFO: There are %d 'real' articles from that date" % len(real_wp_articles), 3)
+    except Exception as e:
+        patrick_logger.log_it('INFO: exception %s occurred' % e, 1)
+        real_wp_articles = []
     
     grateful_to = list(set(random.sample(actually_thanked_by_graham + real_wp_articles, random.randint(3,10))))
 
     ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
     ret = ret + ' ' + random.choice(['for their feedback on these thoughts.', 'for inviting me to speak.',
-       'for reading a previous draft.'])
+       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.'])
     return ret
 
 if __name__ == "__main__":
@@ -168,16 +181,16 @@ if __name__ == "__main__":
 
     for which_para in range(random.randint(2,8)):
         paragraph_length = random.choice(list(range(7, 12)))
-        patrick_logger.log_it('INFO: Getting %d sentences.' % paragraph_length)
+        patrick_logger.log_it('      Getting %d sentences.' % paragraph_length)
         the_brainwave = the_brainwave + gen_text(the_mapping, the_starts, the_markov_length, paragraph_length, paragraph_break_probability=0) + '\n'
 
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
-    if random.random() <= .45:
+    if force_notes or random.random() <= .45:
         the_brainwave = the_brainwave + '\n' + get_notes()
     
-    if random.random() <= 1 / 3:
+    if force_gratitude or random.random() <= 1 / 3 :
         the_brainwave = the_brainwave + '\n' + get_thanks()
 
     patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
