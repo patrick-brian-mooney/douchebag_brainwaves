@@ -1,0 +1,1341 @@
+Script started on Mon 22 Feb 2016 03:35:50 PM PST
+15:35:51 patrick@linawesome mallet$ pwd
+/home/patrick/bin/mallet
+15:35:55 patrick@linawesome mallet$ ls -la working/
+total 2196
+drwxr-xr-x  2 patrick patrick    4096 Feb 22 15:26 .
+drwxrwxrwx 11 patrick users      4096 Feb 22 15:35 ..
+-rw-rw-r--  1 patrick patrick 2232174 Feb 22 05:28 graham.txt
+15:36:00 patrick@linawesome mallet$ bin/mallet import-dir --input working/^C
+15:36:22 patrick@linawesome mallet$ bin/mallet import-dir --input working/ --output graham.mallet --kep[Ke-[K[^C
+15:36:42 patrick@linawesome mallet$ bin/mallet import-dir --input working/ --output graham.mallet --keep-sequen ce --remove-stopwa[Kords
+Labels = 
+   working/
+15:37:10 patrick@linawesome mallet$ ls -la grah*
+-rw-rw-r-- 1 patrick patrick 779050 Feb 22 15:37 graham.mallet
+15:37:30 patrick@linawesome mallet$ bin/mallet train-topics --input graham.mallet --num-topics 15 --optimize-in terval 1000 --output-state graham-state.gz --output-topics-keys graham_keys.csv --output [K-doc-topics graham_comp osition.csv --worl[Kd-topic-counts-file graham_word_topic_counts.txt
+A tool for estimating, saving and printing diagnostics for topic models, such as LDA.
+--help TRUE|FALSE
+  Print this command line option usage information.  Give argument of TRUE for longer documentation
+  Default is false
+--prefix-code 'JAVA CODE'
+  Java code you want run before any other interpreted code.  Note that the text is interpreted without modification, so unlike some other Java code options, you need to include any necessary 'new's when creating objects.
+  Default is null
+--config FILE
+  Read command option values from a file
+  Default is null
+--input FILENAME
+  The filename from which to read the list of training instances.  Use - for stdin.  The instances must be FeatureSequence or FeatureSequenceWithBigrams, not FeatureVector
+  Default is null
+--input-model FILENAME
+  The filename from which to read the binary topic model. The --input option is ignored. By default this is null, indicating that no file will be read.
+  Default is null
+--input-state FILENAME
+  The filename from which to read the gzipped Gibbs sampling state created by --output-state. The original input file must be included, using --input. By default this is null, indicating that no file will be read.
+  Default is null
+--output-model FILENAME
+  The filename in which to write the binary topic model at the end of the iterations.  By default this is null, indicating that no file will be written.
+  Default is null
+--output-state FILENAME
+  The filename in which to write the Gibbs sampling state after at the end of the iterations.  By default this is null, indicating that no file will be written.
+  Default is null
+--output-model-interval INTEGER
+  The number of iterations between writing the model (and its Gibbs sampling state) to a binary file.  You must also set the --output-model to use this option, whose argument will be the prefix of the filenames.
+  Default is 0
+--output-state-interval INTEGER
+  The number of iterations between writing the sampling state to a text file.  You must also set the --output-state to use this option, whose argument will be the prefix of the filenames.
+  Default is 0
+--inferencer-filename FILENAME
+  A topic inferencer applies a previously trained topic model to new documents.  By default this is null, indicating that no file will be written.
+  Default is null
+--evaluator-filename FILENAME
+  A held-out likelihood evaluator for new documents.  By default this is null, indicating that no file will be written.
+  Default is null
+--output-topic-keys FILENAME
+  The filename in which to write the top words for each topic and any Dirichlet parameters.  By default this is null, indicating that no file will be written.
+  Default is null
+--num-top-words INTEGER
+  The number of most probable words to print for each topic after model estimation.
+  Default is 20
+--show-topics-interval INTEGER
+  The number of iterations between printing a brief summary of the topics so far.
+  Default is 50
+--topic-word-weights-file FILENAME
+  The filename in which to write unnormalized weights for every topic and word type.  By default this is null, indicating that no file will be written.
+  Default is null
+--word-topic-counts-file FILENAME
+  The filename in which to write a sparse representation of topic-word assignments.  By default this is null, indicating that no file will be written.
+  Default is null
+--diagnostics-file FILENAME
+  The filename in which to write measures of topic quality, in XML format.  By default this is null, indicating that no file will be written.
+  Default is null
+--xml-topic-report FILENAME
+  The filename in which to write the top words for each topic and any Dirichlet parameters in XML format.  By default this is null, indicating that no file will be written.
+  Default is null
+--xml-topic-phrase-report FILENAME
+  The filename in which to write the top words and phrases for each topic and any Dirichlet parameters in XML format.  By default this is null, indicating that no file will be written.
+  Default is null
+--output-topic-docs FILENAME
+  The filename in which to write the most prominent documents for each topic, at the end of the iterations.  By default this is null, indicating that no file will be written.
+  Default is null
+--num-top-docs INTEGER
+  When writing topic documents with --output-topic-docs, report this number of top documents.
+  Default is 100
+--output-doc-topics FILENAME
+  The filename in which to write the topic proportions per document, at the end of the iterations.  By default this is null, indicating that no file will be written.
+  Default is null
+--doc-topics-threshold DECIMAL
+  When writing topic proportions per document with --output-doc-topics, do not print topics with proportions less than this threshold value.
+  Default is 0.0
+--doc-topics-max INTEGER
+  When writing topic proportions per document with --output-doc-topics, do not print more than INTEGER number of topics.  A negative value indicates that all topics should be printed.
+  Default is -1
+--num-topics INTEGER
+  The number of topics to fit.
+  Default is 10
+--num-threads INTEGER
+  The number of threads for parallel training.
+  Default is 1
+--num-iterations INTEGER
+  The number of iterations of Gibbs sampling.
+  Default is 1000
+--num-icm-iterations INTEGER
+  The number of iterations of iterated conditional modes (topic maximization).
+  Default is 0
+--no-inference true|false
+  Do not perform inference, just load a saved model and create a report. Equivalent to --num-iterations 0.
+  Default is false
+--random-seed INTEGER
+  The random seed for the Gibbs sampler.  Default is 0, which will use the clock.
+  Default is 0
+--optimize-interval INTEGER
+  The number of iterations between reestimating dirichlet hyperparameters.
+  Default is 0
+--optimize-burn-in INTEGER
+  The number of iterations to run before first estimating dirichlet hyperparameters.
+  Default is 200
+--use-symmetric-alpha true|false
+  Only optimize the concentration parameter of the prior over document-topic distributions. This may reduce the number of very small, poorly estimated topics, but may disperse common words over several topics.
+  Default is false
+--alpha DECIMAL
+  SumAlpha parameter: sum over topics of smoothing over doc-topic distributions. alpha_k = [this value] / [num topics]
+  Default is 5.0
+--beta DECIMAL
+  Beta parameter: smoothing parameter for each topic-word. beta_w = [this value]
+  Default is 0.01
+
+Unrecognized option 8: --output-topics-keys
+15:39:02 patrick@linawesome mallet$ bin/mallet train-topics --input graham.mallet --num-topics 15 --optimize-intterval 1000 --output-state graham-state.gz --output-topics-keys graham_keys.csv --output-doc-topics graham_compoosition.csv --word-topic-counts-file graham_word_topic_counts.txt[A[A[K
+[K
+[K[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cbin/mallet train-topics --input graham.mallet --num-topics 15 --optimize-in terval 1000 --output-state graham-state.gz --output-topic-keys graham_keys.csv --output-doc-topics graham_compo sition.csv --word-topic-counts-file graham_word_topic_counts.txt
+Mallet LDA: 15 topics, 4 topic bits, 1111 topic mask
+Data loaded.
+max tokens: 152883
+total tokens: 152883
+<10> LL/token: -9.53286
+<20> LL/token: -9.23257
+<30> LL/token: -9.07942
+<40> LL/token: -8.98662
+
+0	0.33333	business startup languages users working hard realize end silicon microsoft students large programming doesn't plan years half form won't market 
+1	0.33333	language company big people thinking ideas question that's funding problem year pay started work fact general round till type true 
+2	0.33333	don't startups investors start point idea money big fact successful simply means thing day case stock you'll email search lot 
+3	0.33333	people things it's great code users learn rich talk back we're real number valley work competitors you'll yahoo works problems 
+4	0.33333	company companies people you're startup i'd investors don't startups they're thing raise viaweb programs young combinator taking source deal head 
+5	0.33333	start good startups easy buy deals matter idea ago close you're online real office they're they've rest scale wealth people 
+6	0.33333	can't work good long companies don't means startup program couple change lot investors put advantage main site worked terms adults 
+7	0.33333	it's founders makes programmers world wouldn't they'll people college didn't product deal work angels words effect running company call called 
+8	0.33333	they're hard small give startup life kind lisp million high group times wealth run investor top ten pretty expect worth 
+9	0.33333	software it's don't i'm feel starting working made early startups spam kids fast bad things power make written founders work 
+10	0.33333	make there's startup doesn't you'd apple grow set interesting attention growth part vcs history quality problem mistake made low solution 
+11	0.33333	startups writing school thing people kind time there's popular spend work choose cost ways can't news rounds vcs web-based you've 
+12	0.33333	hackers thought stuff powerful wrong lot money future sort investors build technology people job companies making computer big happen kinds 
+13	0.33333	you're founders find make reason i've bad things people they'd vcs startup good list design read word that's remember easier 
+14	0.33333	time good ideas didn't work money write common important years isn't google problem imagine talking things create smart lot sense 
+
+<50> LL/token: -8.9211
+<60> LL/token: -8.87746
+<70> LL/token: -8.83868
+<80> LL/token: -8.80245
+<90> LL/token: -8.77428
+
+0	0.33333	users business doesn't hard startup end won't years microsoft silicon programming powerful large what's plan students half advantage important form 
+1	0.33333	company language people problem startup big that's started question things thinking type round place essay funding turn live general couldn't 
+2	0.33333	don't money investors fact startups point case start till idea fast wanted simply you'll successful solve search customers stock big 
+3	0.33333	people great it's work thing world problems real rich code talk learn back valley true things valuable yahoo version competitors 
+4	0.33333	companies company people startups they're investors i'd startup wouldn't you're sense raise source thing viaweb series programming we've young open 
+5	0.33333	start idea you're easy buy deals technology ago people matter avoid close office online price supposed faster scale specific raising 
+6	0.33333	startup means can't long work year program put growth companies angel combinator main process site worked internet terms pay building 
+7	0.33333	it's founders makes programmers people deal school they'll change investors product didn't languages tend running experience called effect investing fund 
+8	0.33333	they're make lisp kind give hard high life you'll million worth run group programs small wealth applications pretty there's investor 
+9	0.33333	things software it's you're i'm don't working work made starting feel early bad founders power understand spam kids written small 
+10	0.33333	make there's you'd interesting part apple startup grow set attention quality history successful mistake selling show american university sites he's 
+11	0.33333	startups writing job time can't you've web list amount test popular school words cost ways web-based news project rounds recently 
+12	0.33333	hackers lot making thought day wrong stuff build kids computer sort don't future free effort research surprising meant forces wait 
+13	0.33333	good vcs reason find you're that's big number people they'd design read i've make it's happen technology problem remember easier 
+14	0.33333	time ideas good money work lot didn't write market smart common google years average talking imagine projects isn't succeed offer 
+
+<100> LL/token: -8.76187
+<110> LL/token: -8.7439
+<120> LL/token: -8.73244
+<130> LL/token: -8.71607
+<140> LL/token: -8.70387
+
+0	0.33333	users startup doesn't business that's hard programming languages won't large powerful microsoft silicon important what's buy students advantage plan half 
+1	0.33333	language startups company big started problem startup thinking essay type round place question turn live email couldn't people fund decide 
+2	0.33333	don't money lot investors start point fact end you'll startups day case till answer fast successful simply wanted customers stock 
+3	0.33333	people it's thing world great work real back problems rich talk learn problem code valley web true we're google valuable 
+4	0.33333	people companies company they're investors startups don't wouldn't sense raise i'd source series programs young create terms focus open taking 
+5	0.33333	idea you're deals technology ago close supposed easy avoid online price office raising rest scale specific lots eventually cheap sound 
+6	0.33333	startup means long year college program put matter couple angel companies main combinator software process growth site worked succeed interested 
+7	0.33333	founders it's didn't makes programmers people investors deal they'll made change work isn't run running experience called words make valuation 
+8	0.33333	make they're kind lisp small give it's high life wealth worth spam group investor applications spend write you'll million there's 
+9	0.33333	things software work working i'm you're it's starting feel early sort understand person power made kids written worry don't harder 
+10	0.33333	there's you'd interesting part grow make set attention building history successful quality selling solution sites stupid faster mistake taste happening 
+11	0.33333	can't startups writing school job realize you've list amount popular ways news you're test dangerous choose project recently worse biggest 
+12	0.33333	hackers making thought stuff build computer kids wrong startup free meant lot kinds effort future research order suspect tend guess 
+13	0.33333	good big vcs find that's make reason start you're bad number i've read they'd happen design technology problem remember rate 
+14	0.33333	time ideas good money years work lot market smart write average talking aren't common imagine didn't projects notice offer grad 
+
+<150> LL/token: -8.6925
+<160> LL/token: -8.69356
+<170> LL/token: -8.68881
+<180> LL/token: -8.68168
+<190> LL/token: -8.68327
+
+0	0.33333	startup users business doesn't languages programming important hard large won't students powerful plan buy what's years half silicon told form 
+1	0.33333	startups language big started fact question essay type round place turn startup common early cost fund decide couldn't difference century 
+2	0.33333	don't lot money start investors point end day successful case wanted fast till times you'll simply search customers fact answer 
+3	0.33333	people it's thing problem world great real problems back rich code talk work valley true we're wrong web valuable things 
+4	0.33333	people company don't investors i'd companies you're they're wouldn't raise sense change source programs series viaweb startups create learn taking 
+5	0.33333	idea technology easy deals ago top supposed online you're close won't quality performance technical explain rest scale friend avoid office 
+6	0.33333	companies startup means long year college google program matter put angel main you're site process pay succeed growth internet risk 
+7	0.33333	founders it's work investors makes programmers deal they'll isn't didn't made experience words called run stock running angels valuation call 
+8	0.33333	make they're kind write lisp small it's give hard high wealth there's life you'll worth group million investor applications spend 
+9	0.33333	things software work working i'm you're kids design starting made understand feel it's person power jobs written model worry harder 
+10	0.33333	interesting you'd there's part grow set attention faster history public mistake building firms hardware left solution stupid variation sites remember 
+11	0.33333	can't startups writing school job tend you've list amount realize test popular choose project price practice web-based dangerous expected success 
+12	0.33333	hackers making stuff thought build work free notice effort meant surprising projects forces order wrong firm guess options act finally 
+13	0.33333	good that's make vcs find reason you're bad big number start i've they'd happen future invest spam easier art rate 
+14	0.33333	time ideas good money didn't years market smart lot average apple talking funding aren't imagine surprised investing write computer takes 
+
+<200> LL/token: -8.66544
+<210> LL/token: -8.6624
+<220> LL/token: -8.65077
+<230> LL/token: -8.64759
+<240> LL/token: -8.64162
+
+0	0.33333	hard users business doesn't languages startup important programming large thought silicon start students plan combinator powerful advantage half buy form 
+1	0.33333	startups language big fact startup started question essay place turn type round cost email fund economic terms decide difference century 
+2	0.33333	don't lot money point end day wanted case till successful start answer thinking simply fast search times customers investors we've 
+3	0.33333	people it's problem thing work great writing world real problems back rich code valley web true microsoft we're talk learn 
+4	0.33333	company people investors don't i'd companies raise sort sense source aren't viaweb young mind taking create learn initial they're current 
+5	0.33333	idea you're won't easy deals top general adults quality approach performance technical online specific lots scale multiple firm government sound 
+6	0.33333	startup companies means long google year college pay program matter life put run angel fundraising main change live site succeed 
+7	0.33333	founders investors makes programmers deal it's didn't they'll isn't experience words wouldn't stock work valuation effect wrote word angels parents 
+8	0.33333	make they're it's write there's kind lisp small you'll give high wealth million group worth investor spend pretty applications programs 
+9	0.33333	things you're software work working i'm made kids design person understand feel power time it's jobs written model worry harder 
+10	0.33333	you'd interesting part remember firms attention mistake gradually hardware left faster avoid couldn't stupid variation taste happening age spammers difficult 
+11	0.33333	can't startups school tend you've job realize amount competitors list test popular project product price dangerous practice employees biggest success 
+12	0.33333	hackers making wrong stuff couple free effort notice surprising thought work standard order win finally meaning act culture rapidly hiring 
+13	0.33333	good that's vcs reason big start bad find number technology i've they'd make invest future happen spam growth series build 
+14	0.33333	time ideas money years good market smart didn't read common starting funding average computer talking grow imagine hacker work surprised 
+
+<250> LL/token: -8.64756
+<260> LL/token: -8.63226
+<270> LL/token: -8.62262
+<280> LL/token: -8.62045
+<290> LL/token: -8.6185
+
+0	0.33333	hard users doesn't business languages important programming startup thought didn't large powerful start buy what's students half months told form 
+1	0.33333	startups language fact started startup type round essay turn email cost fund economic decide difference century yahoo terms false rest 
+2	0.33333	money don't lot point start end day successful wanted case till answer times thinking simply customers we've rounds rule wasn't 
+3	0.33333	people it's thing problem work world great writing real problems back rich learn code talk web valley microsoft valuable pretty 
+4	0.33333	company companies don't investors people i'd sort raise source founder sense young aren't viaweb ambitious taking open initial art current 
+5	0.33333	idea won't ago general easy supposed adults top performance technical hundred approach lots scale firm single sound clear multiple deals 
+6	0.33333	startup means long year google college pay program matter run life angel fundraising process site live office projects change succeed 
+7	0.33333	founders investors makes programmers deal wouldn't isn't word experience didn't they'll called words stock angels avoid valuation wrote effect call 
+8	0.33333	make they're write there's kind you'll it's lisp small give high wealth million investor group worth spend advantage applications raising 
+9	0.33333	things you're work software working i'm made reason kids design find starting realize feel understand tend power bad person time 
+10	0.33333	you'd true remember couldn't questions faster part mistake position interesting left head stupid york happening forced difficult we're search opinions 
+11	0.33333	startups can't school job you've product fast list amount competitors popular worked web-based data price dangerous employees deals project selling 
+12	0.33333	hackers making wrong stuff couple win free choose effort attention surprising face online question taste finally variation culture meaning deciding 
+13	0.33333	good big that's vcs number technology i've bad start they'd invest early make happen spam growth build find future series 
+14	0.33333	time ideas good years market smart read common programs funding average computer talking didn't imagine hacker investing offer grad surprised 
+
+<300> LL/token: -8.6065
+<310> LL/token: -8.6071
+<320> LL/token: -8.59993
+<330> LL/token: -8.60258
+<340> LL/token: -8.60679
+
+0	0.33333	hard users startup doesn't business important languages programming thought large powerful silicon what's students combinator told start form months patent 
+1	0.33333	startups language fact started essay type round yahoo they'd terms economic fund running century difference turn single short past we'd 
+2	0.33333	money don't lot point start end successful wanted till thinking times day answer simply search customers we've worse wasn't funded 
+3	0.33333	people it's thing work problem great world writing problems back real rich learn code talk valley web microsoft true pretty 
+4	0.33333	company companies don't investors change sort raise sense source aren't plan people young founder ambitious taking i'd close biggest open 
+5	0.33333	idea won't easy ago i'd top general test investing adults technical hundred didn't lots supposed based multiple approach guess develop 
+6	0.33333	startup means long google year college life pay program matter main fundraising you're site angel live process succeed office internet 
+7	0.33333	founders investors didn't makes programmers deal wouldn't isn't they'll word experience words angels avoid valuation called firms user run application 
+8	0.33333	they're make write there's kind you'll lisp give high small wealth question interesting million place applications investor couple advantage spend 
+9	0.33333	things you're work software working i'm made reason kids design feel time realize case understand find put person jobs written 
+10	0.33333	you'd part remember couldn't questions head types we're left age apple york goal faster turn gradually add spammers boss compete 
+11	0.33333	can't school making job startups lot smart product you've fast solve competitors popular list amount talking tend web-based data price 
+12	0.33333	hackers wrong stuff win choose free effort nerds force surprising show face explain attention schools numbers actual taste finally culture 
+13	0.33333	good that's make big vcs bad number start technology i've find early invest spam future worth happen growth build series 
+14	0.33333	time ideas good years market common read programs funding starting average grow surprised computer imagine offer grad hacker takes java 
+
+<350> LL/token: -8.59637
+<360> LL/token: -8.60154
+<370> LL/token: -8.60137
+<380> LL/token: -8.59795
+<390> LL/token: -8.57989
+
+0	0.33333	hard startup doesn't users languages programming important thought powerful large silicon day what's students business combinator months form told hear 
+1	0.33333	language startups started fact essay type round running grow yahoo called email fund decide terms economic effect century single patents 
+2	0.33333	money don't lot point successful wanted start till thinking answer times end vcs simply half stock search customers we've rule 
+3	0.33333	people it's thing problem world great writing real problems back rich learn talk valley microsoft true code web work we're 
+4	0.33333	don't company companies investors i'd change sort sense source aren't plan founder close buy raise ambitious fact biggest current full 
+5	0.33333	idea won't easy ago test general online adults top technical lots hundred leave professors based filtering mail server clear similar 
+6	0.33333	startup means long google college life pay program you're year matter worth angel site process create office internet projects knew 
+7	0.33333	founders didn't investors makes programmers deal they'll wouldn't isn't word realize experience words valuation angels call rounds firms generally focus 
+8	0.33333	they're write there's kind make you'll lisp give wealth small question interesting million high group applications couple investor raising set 
+9	0.33333	work things you're software time reason working made i'm kids bad design feel tend starting understand case person put apple 
+10	0.33333	you'd part turn remember couldn't faster head types gradually age left end position meeting assume york goal add lines difficult 
+11	0.33333	startups can't lot school making job smart product fast solve talking competitors list popular you've friends cost supposed attention hacker 
+12	0.33333	hackers wrong stuff place run win choose nerds force explain surprising face show intelligence schools numbers free effort finally taste 
+13	0.33333	good make big that's start find number vcs i've technology early spam invest future happen they'd build users growth series 
+14	0.33333	ideas years time business read programs common average imagine viaweb computer math takes surprised grad history offer paid funding side 
+
+<400> LL/token: -8.57859
+<410> LL/token: -8.57995
+<420> LL/token: -8.58737
+<430> LL/token: -8.58774
+<440> LL/token: -8.59016
+
+0	0.33333	startup hard doesn't important business programming languages users day thought silicon powerful what's vcs months told thinking patent open kinds 
+1	0.33333	language startups started company essay type round called students yahoo system email grow fundraising effect you'd fund running economic times 
+2	0.33333	money don't lot vcs point successful till answer start end simply combinator half stock wanted customers young form rule we've 
+3	0.33333	people it's thing problem world great writing back real learn talk code rich problems web valley microsoft true funding we're 
+4	0.33333	companies don't investors company fact i'd change sort sense raise buy aren't plan source ambitious practice biggest founder stage full 
+5	0.33333	idea won't easy ago top online general learned hundred adults term fix professors based leave care variation york reading guess 
+6	0.33333	startup means long google college life pay program angel worth live process site worked create year main internet knew succeed 
+7	0.33333	founders didn't programmers makes deal investors wouldn't isn't word they'll words avoid angels wrote hacker call expect valuation firms parents 
+8	0.33333	they're write there's kind you'll lisp small give wealth bad make question interesting group investor couple applications million advantage raising 
+9	0.33333	work things you're software time reason working i'm made design feel starting tend realize case kids understand large put person 
+10	0.33333	remember difference faster couldn't head you'd types age left gradually end meeting part goal began options solve difficult lines close 
+11	0.33333	startups can't lot school making idea job smart product fast amount competitors popular friends list investing data price attention investment 
+12	0.33333	hackers wrong stuff run place win choose nerds force explain show intelligence schools page numbers fun taste finally trend surprisingly 
+13	0.33333	good make that's big start find technology number i've users early spam they'd future happen build company series invest matter 
+14	0.33333	ideas years time read common programs average imagine market viaweb surprised side math quality takes history grad employees wanted business 
+
+<450> LL/token: -8.58783
+<460> LL/token: -8.58265
+<470> LL/token: -8.57191
+<480> LL/token: -8.57804
+<490> LL/token: -8.5685
+
+0	0.33333	startup hard business doesn't languages important programming day thought common powerful what's thinking silicon told supposed obvious hear news viaweb 
+1	0.33333	language company started you'd essay type students round yahoo fundraising email effect times fund terms economic grow called single patents 
+2	0.33333	money don't vcs point successful till answer end lot simply start combinator search test half stock invest young individual form 
+3	0.33333	people it's thing problem world great writing problems back real rich learn talk valley code web microsoft true we're funding 
+4	0.33333	don't investors companies company fact ideas change kids i'd sense buy sort raise close ambitious practice biggest current stage full 
+5	0.33333	won't easy ago idea top general learned fix reading leave term created fields based hundred york filtering guess similar server 
+6	0.33333	startup means long google year pay program life worth angel version live site process create office college knew taking internet 
+7	0.33333	founders didn't makes programmers deal wouldn't they'll investors isn't word experience words avoid angels run wrote hacker expect firms parents 
+8	0.33333	they're bad kind you'll there's lisp small write wealth interesting give applications investor spend advantage aren't raising set designed ten 
+9	0.33333	work things you're time software reason working made design feel starting high tend realize case large understand put person i'm 
+10	0.33333	couldn't faster offer head give gradually write meeting mind began options lines goal press middle left lives compete paper completely 
+11	0.33333	startups lot can't idea school making job smart product fast list amount solve talking founder college competitors friends popular cost 
+12	0.33333	hackers wrong stuff place win months force choose explain schools numbers variation probability page nerds intelligence show meetings surprisingly nature 
+13	0.33333	good make big that's start users find number technology i've early spam matter they'd future happen build figure art adults 
+14	0.33333	years ideas wanted market read programs i'm average imagine surprised math customers plan computer startup history quality grad employees time 
+
+<500> LL/token: -8.56857
+<510> LL/token: -8.56951
+<520> LL/token: -8.56911
+<530> LL/token: -8.58264
+<540> LL/token: -8.58228
+
+0	0.33333	startup hard business doesn't important day thought programming powerful silicon viaweb supposed obvious news rounds thinking hear open what's kinds 
+1	0.33333	language started you'd essay type running students grow yahoo fundraising email terms effect ways called company told economic patents surprising 
+2	0.33333	money lot vcs don't successful end point till answer turn simply combinator half young free we've stock deal generally initial 
+3	0.33333	people it's thing world writing great real problems back there's rich talk valley web won't true problem we're microsoft funding 
+4	0.33333	don't company companies investors kids fact change sort sense raise buy i'd close difference test million ambitious practice stage shouldn't 
+5	0.33333	easy top general thing hundred solution support leave created ago york won't filtering discovered guess server sound what's lead corporate 
+6	0.33333	startup means long google year life pay program worth angel college version source process site create internet knew taking live 
+7	0.33333	founders didn't makes investors they'll isn't word programmers deal wouldn't experience valuation avoid angels words hacker call wrote firms parents 
+8	0.33333	they're bad kind you'll write small lisp give wealth question interesting there's investor couple spend advantage aren't applications raising set 
+9	0.33333	work things you're time software reason working made design feel starting high tend realize large understand case put person group 
+10	0.33333	good mind couldn't faster head guys left meeting middle paper began options round original seed syntax press lives line continue 
+11	0.33333	startups idea can't school lot making job smart product fast list learn talking solve amount founder popular friends cost investing 
+12	0.33333	hackers stuff wrong place i'd win choose nerds force explain show plan intelligence research present nature break difficult class exist 
+13	0.33333	good make big that's start users find number technology problem i've languages early spam they'd matter invest future build programmers 
+14	0.33333	ideas years i'm wanted startup read common programs average computer market customers math surprised imagine time grad history employees java 
+
+<550> LL/token: -8.58265
+<560> LL/token: -8.58193
+<570> LL/token: -8.58228
+<580> LL/token: -8.57155
+<590> LL/token: -8.57277
+
+0	0.33333	startup hard business important doesn't good thought day powerful thinking what's viaweb obvious silicon rounds news learned hear open painting 
+1	0.33333	language started you'd essay type students running yahoo grow fundraising company email told ways supposed risk effect economic competitors surprising 
+2	0.33333	money lot vcs point successful deal long end code till answer turn half combinator doesn't young individual we've rule written 
+3	0.33333	people it's thing problem world writing there's great real back rich talk problems valley microsoft true you've we're funding web 
+4	0.33333	don't company investors companies fact kids change sort raise million test customers close buy sense difference practice power stage types 
+5	0.33333	search easy top general won't questions leave created intelligence solution york sound guess similar corporate discovered lead sales war critical 
+6	0.33333	startup idea google year means life pay program college worth angel version site worked stock create projects attention office internet 
+7	0.33333	founders didn't makes i'm they'll isn't word run experience ago words investors start angels avoid wrote expect firms parents read 
+8	0.33333	they're bad kind you'll small write give lisp wealth question interesting couple spend investor advantage aren't applications set designed ten 
+9	0.33333	work things you're time software reason working made design feel starting tend realize case understand large put person times high 
+10	0.33333	mind couldn't faster guys head mail meeting paper classes productivity press directly lives let's extent concept continue paul options outsiders 
+11	0.33333	startups can't school idea making job smart product fast list amount learn solve talking popular friends cost investing rate side 
+12	0.33333	hackers i'd stuff wrong place win nerds choose explain force show needed hacking writers present firm meetings hack break ibm 
+13	0.33333	make good that's big start users find languages number programmers technology i've spam programming matter invest early future build happen 
+14	0.33333	ideas years market wanted common programs average computer surprised imagine math plan i'm decide grad read employees terms friend scale 
+
+<600> LL/token: -8.57191
+<610> LL/token: -8.56739
+<620> LL/token: -8.55502
+<630> LL/token: -8.55583
+<640> LL/token: -8.56792
+
+0	0.33333	startup hard business important doesn't day thought silicon thinking powerful what's pretty working they'll obvious rounds hear programming viaweb effort 
+1	0.33333	language started you'd type essay running grow students yahoo fundraising email told supposed effect guys ways risk rest past expected 
+2	0.33333	money lot vcs long point end deal successful code till answer turn written combinator young half couldn't free we've reading 
+3	0.33333	people it's thing there's great writing problem real back world rich talk valley web you've funding deals simply problems valuable 
+4	0.33333	don't company investors companies fact founders kids change sort sense million raise ideas apple test customers close place buy difference 
+5	0.33333	search top general shouldn't initial fail created easy sound guess corporate leave sales war buy inside choice handful questions libraries 
+6	0.33333	idea startup year google pay program life version site process stock create attention means office internet worth knew projects employees 
+7	0.33333	founders didn't makes wrong word run experience words isn't live wrote competitors call expect they'll firms easy offer focus public 
+8	0.33333	they're bad kind you'll write lisp small give wealth question interesting applications couple spend investor advantage aren't set designed raising 
+9	0.33333	work things you're time software reason made working design means feel tend starting high realize case wouldn't understand large person 
+10	0.33333	world mind faster head common mail options rapidly life extent level failure directly intellectual lives let's store concept originally outsiders 
+11	0.33333	startups can't school making job learn college smart product fast list amount solve talking founder friends investing data dangerous user 
+12	0.33333	hackers i'd stuff won't win choose nerds force hacking writers needed place present produce ago painting meetings america hack break 
+13	0.33333	good make big that's start users find languages number technology programmers i've early problem matter invest spam programming future build 
+14	0.33333	ideas years i'm market wanted read average programs computer common surprised math decide friend grad quality scale terms living meet 
+
+<650> LL/token: -8.55971
+<660> LL/token: -8.56069
+<670> LL/token: -8.5568
+<680> LL/token: -8.54721
+<690> LL/token: -8.55459
+
+0	0.33333	startup hard business doesn't important day working powerful silicon thinking thought what's test viaweb class news rounds obvious hear programming 
+1	0.33333	language started you'd microsoft type run running students didn't yahoo fundraising email told effect ways supposed guys grow patents past 
+2	0.33333	money lot vcs long point end deal successful till answer turn written half couldn't young free taking rule combinator applications 
+3	0.33333	people it's thing there's writing great back real talk valley rich won't you've worth world funding web language simply deals 
+4	0.33333	don't company investors companies founders fact kids change sort sense million raise buy apple customers worked power difference happened biggest 
+5	0.33333	search raising top general initial sound guess produce message sales growing war fail inside ten choice handful libraries topic shouldn't 
+6	0.33333	idea startup google year life program pay vcs version angel stock internet projects knew process worse employees create attention low 
+7	0.33333	founders didn't makes wrong they'll word early easy isn't words competitors experience avoid wrote call expect parents focus live public 
+8	0.33333	they're bad kind you'll lisp small wealth give question interesting write language investor couple spend advantage aren't months designed set 
+9	0.33333	work things you're time software reason made means design feel high tend realize wouldn't understand large starting problems put part 
+10	0.33333	world mind head mail living profitable form extent home lives let's rapidly constantly partner organic usual directly leverage understanding realized 
+11	0.33333	startups can't school making job college learn smart product code list fast solve talking amount founder popular friends investing side 
+12	0.33333	hackers i'd stuff place ago win essay nerds choose principle hacking needed writers won't firms poor present meetings hack failure 
+13	0.33333	good make big that's start users problem find technology programmers languages i've number write spam matter invest future programming happen 
+14	0.33333	ideas years i'm market wanted common read average computer surprised math decide grad programs friend quality scale terms meet wait 
+
+<700> LL/token: -8.56341
+<710> LL/token: -8.57482
+<720> LL/token: -8.57681
+<730> LL/token: -8.57205
+<740> LL/token: -8.57156
+
+0	0.33333	startup hard business working doesn't means programming important day thought they'll powerful thinking what's pretty test class obvious news learned 
+1	0.33333	started type run you'd running language students yahoo fundraising email told supposed ways guys they're effect essay paid expected thousand 
+2	0.33333	money lot long point deal end successful hackers till vcs answer applications turn written combinator rich individual free young reading 
+3	0.33333	people it's thing there's great writing real back won't talk valley problems web you've worth simply deals valuable works found 
+4	0.33333	don't company investors companies founders fact kids change sort ideas sense raise program buy apple customers choose plan worked difference 
+5	0.33333	programs search top general hacker raising sites sound century guess city funding growing problems term inside fortunately speed lost topic 
+6	0.33333	idea startup year vcs life pay google angel version true stock angels office attention internet process knew terms user employees 
+7	0.33333	didn't founders wrong isn't word easy makes competitors experience give words live avoid create wrote parents focus book kinds application 
+8	0.33333	they're language bad kind you'll lisp small write question interesting investor couple wealth aren't spend set designed easier succeed online 
+9	0.33333	work things you're time software reason made design feel high tend realize understand large put part we're times group growth 
+10	0.33333	world common mind form head investment cheap extent driven constantly surprises usual books handful solutions traffic bayesian peers response judge 
+11	0.33333	startups can't school making job code smart college product microsoft learn amount solve talking average founder friends fast rich popular 
+12	0.33333	i'd stuff place market hackers close win projects practice nerds happened essay principle needed writers develop surprised clear present meetings 
+13	0.33333	good make big that's start problem users find languages number programmers i've technology spam they'd matter invest write early don't 
+14	0.33333	years ideas i'm wanted read computer couldn't decide quality market person ten friend scale list meet chance wait suspect american 
+
+<750> LL/token: -8.56788
+<760> LL/token: -8.56246
+<770> LL/token: -8.5553
+<780> LL/token: -8.55524
+<790> LL/token: -8.55818
+
+0	0.33333	startup hard business doesn't means working important programming thought day they'll wrong powerful thinking silicon pretty viaweb class what's rounds 
+1	0.33333	started you'd type run running students fundraising email told supposed effect general guys yahoo essay patents paid sign expected filter 
+2	0.33333	money lot hackers long point end deal rich successful vcs answer till applications wouldn't turn written combinator half young free 
+3	0.33333	people it's thing there's great writing won't problems talk back valley web you've worth true advantage happen works found simply 
+4	0.33333	don't company investors founders companies fact kids case change program sense raise sort buy build apple plan ago customers worked 
+5	0.33333	programs real funding raising learn top search city sites source step guess spend route popular message describe sales fortunately inside 
+6	0.33333	startup idea year life vcs angel future stock process angels office attention google internet knew pay worse pick current short 
+7	0.33333	didn't give isn't word easy competitors words live read experience wrote expect parents interested avoid offer individual focus made public 
+8	0.33333	they're language bad write kind you'll lisp small question interesting wealth couple aren't designed online rate web-based succeed advice research 
+9	0.33333	work things you're time software reason design feel realize high tend starting large understand made person part million group growth 
+10	0.33333	world form terms ways common put head investment order past made economic discovered generally driven we're paper history times changing 
+11	0.33333	startups can't school making job code college smart product microsoft fast average amount solve list founder months talking cost learn 
+12	0.33333	i'd stuff place google close happened nerds called force hacker essay principle practice projects hacking needed surprised develop space writers 
+13	0.33333	good make big that's start problem users find languages makes technology programmers number i've early spam they'd matter invest round 
+14	0.33333	ideas years i'm market computer wanted ten couldn't common decide pay books specific scale read dollars chance quality predict perl 
+
+<800> LL/token: -8.55716
+<810> LL/token: -8.54704
+<820> LL/token: -8.54636
+<830> LL/token: -8.55146
+<840> LL/token: -8.56474
+
+0	0.33333	startup hard doesn't business means important thought day they'll wrong powerful silicon thinking programming what's pretty viaweb class obvious data 
+1	0.33333	started you'd type running students fundraising email told supposed effect guys funded patents sign can't expected they've thousand fields filter 
+2	0.33333	money lot hackers long point end deal rich i'd vcs till wouldn't answer successful applications written half combinator turn free 
+3	0.33333	people it's thing there's great writing problems won't talk back web true you've worth simply real valuable advantage works found 
+4	0.33333	don't company investors founders companies fact kids you're change case program sense raise happen build buy apple plan customers programming 
+5	0.33333	programs funding top real search friends raising sites code step spend city development guess standards route learn feel back i'll 
+6	0.33333	startup idea year life future pay angel working give stock angels vcs attention office knew difference process worse short rest 
+7	0.33333	didn't word isn't easy made competitors give experience words live fast individual create wrote avoid parents focus public interested spent 
+8	0.33333	they're language bad write you'll kind lisp small question interesting aren't couple set designed succeed online rate advice research sort 
+9	0.33333	work things time you're software reason design high starting tend realize made feel large put person part understand million we're 
+10	0.33333	world ways vcs terms form generally head past order scale variation gradually driven paper professional imagine convincing changing constantly easier 
+11	0.33333	startups can't school making college smart product job microsoft code average solve talking list founder popular cost months investing side 
+12	0.33333	google stuff place close surprised hacker control trouble happened nerds painting essay principle fairly practice late hacking force writers space 
+13	0.33333	good make big that's start problem users find languages number technology programmers makes i've early spam matter they'd wealth invest 
+14	0.33333	ideas years i'm wanted market common computer learn read couldn't ten taking decide quality good specific meet dollars predict wait 
+
+<850> LL/token: -8.56768
+<860> LL/token: -8.5586
+<870> LL/token: -8.56066
+<880> LL/token: -8.55824
+<890> LL/token: -8.57554
+
+0	0.33333	startup hard business doesn't means important thought wrong startups day thinking group what's powerful pretty they'll search class choose rounds 
+1	0.33333	started you'd essay type running students email supposed told effect guys notice patents expected they've thousand fields based funded meant 
+2	0.33333	money lot hackers long point end rich i'd successful deal wouldn't till programming applications turn version vcs combinator answer half 
+3	0.33333	people it's thing there's great writing real problems back won't talk valley program web true worth valuable you've simply works 
+4	0.33333	don't company investors founders companies kids change sense you're happen case raise buy spend fact worry ago customers worked sort 
+5	0.33333	code programs funding raising realize top false development step learn guess one's message i'll standards write organization information view super-angels 
+6	0.33333	idea startup vcs year working life pay future angel series stock process angels office google general knew attention difference user 
+7	0.33333	didn't give isn't word easy competitors experience words create wrote individual parents interested avoid offer web-based hire live focus spent 
+8	0.33333	they're language bad kind you'll lisp write small question interesting investor fact couple i've aren't set easier projects online rate 
+9	0.33333	work things you're time software reason made high tend understand large feel put design part million we're growth realize source 
+10	0.33333	world fundraising ways form generally head terms can't close order java break variation fashion surprises property imagine types phone company's 
+11	0.33333	startups can't school making job college product good microsoft smart list average talking fast solve people founder cost investing risk 
+12	0.33333	stuff place google surprised jobs trouble hacker happened nerds cases principle late hacking needed develop writers options extreme meetings exist 
+13	0.33333	make good big that's start problem users find languages makes technology number programmers wealth spam matter invest early round they'd 
+14	0.33333	ideas years i'm market read common wanted learn computer build starting couldn't ten decide taking kinds force books scale gradually 
+
+<900> LL/token: -8.5667
+<910> LL/token: -8.57065
+<920> LL/token: -8.57179
+<930> LL/token: -8.57144
+<940> LL/token: -8.5661
+
+0	0.33333	startup hard business startups doesn't means write important wrong thinking group what's thought search pretty class effort rounds patent open 
+1	0.33333	started you'd deal students essay running supposed effect told guys notice single patents they've expected couple funded based type email 
+2	0.33333	money lot hackers long point end rich successful i'd wouldn't vcs till answer turn version half combinator applications fund rule 
+3	0.33333	people it's thing there's great writing real problems back day won't talk program you've true worth valley simply web advantage 
+4	0.33333	don't company investors founders companies kids change case programming fact sense raise happen power buy you're spend worry customers viaweb 
+5	0.33333	code programs funding raising false spent car step development message standards i'll organization teach parts super-angels feature lot rules derived 
+6	0.33333	idea working year google vcs startup life pay future angel series process general wrote they'd angels office data art knew 
+7	0.33333	didn't give isn't word competitors experience words mind avoid close individual create idea parents top interested faster thought web-based offer 
+8	0.33333	they're language bad kind lisp small you'll question interesting investor fact they'll aren't million set designed projects online write rate 
+9	0.33333	work things you're time software reason made starting high tend design realize years put large powerful part feel we're times 
+10	0.33333	world fundraising terms form biggest head types paying break expect week giant inside finished grows company's surprises morris employers topics 
+11	0.33333	startups can't school making job smart product list average microsoft college solve talking popular cost months investing founder risk we've 
+12	0.33333	stuff place surprised hacker trouble happened nerds painting application principle month hacking needed develop haven't writers clear operating exist meetings 
+13	0.33333	good make big that's start users problem find languages makes technology number i've programmers spam matter invest wealth round deals 
+14	0.33333	ideas i'm market learn years common read computer build wanted couldn't ten taking quality decide scale dollars meet chance predict 
+
+<950> LL/token: -8.56573
+<960> LL/token: -8.56395
+<970> LL/token: -8.57062
+<980> LL/token: -8.57512
+<990> LL/token: -8.57708
+
+0	0.33333	startup hard business doesn't write means startups thinking wrong group thought important silicon what's pretty search rounds building obvious patent 
+1	0.33333	started you'd essay running students type supposed guys email notice funded single patents they've couple focus based initially simple town 
+2	0.33333	money lot hackers long point end successful rich i'd wouldn't answer till easy turn version half written applications reading news 
+3	0.33333	people it's thing there's companies writing idea problems back real problem won't talk day deal program great valley worth you've 
+4	0.33333	don't company investors founders companies programming change kids case sort code raise fact sense happen power buy build spend worry 
+5	0.33333	programs funding side spent false car development raising step code information prevent customer super-angels taught ibm deciding class due domain 
+6	0.33333	vcs working google idea life year they'd pay future angel startup series office wrote art process data stock angels current 
+7	0.33333	didn't give isn't word competitors words mind close individual top web-based parents interested questions faster offer create public explain shouldn't 
+8	0.33333	they're language bad kind lisp small question they'll interesting you'll fact investor main designed live easier succeed figure online projects 
+9	0.33333	work things you're time software reason made years design feel high starting realize great large tend understand stuff powerful person 
+10	0.33333	world set form expect terms biggest head types practice discovered paying robert thousands time inside things front break finally fund 
+11	0.33333	startups can't school making product fast list average smart microsoft ideas solve talking job computer popular founder cost ways investing 
+12	0.33333	place aren't surprised hacker trouble nerds painting happened month needed haven't ignore bubble develop happening nature clear profitable changed kid 
+13	0.33333	good make big that's start users find languages makes number technology i've problem programmers wealth early matter invest deals spam 
+14	0.33333	ideas i'm learn market common read years ten couldn't round adults books general specific we'd taking chance predict scale convince 
+
+[beta: 0.0239] 
+<1000> LL/token: -8.54943
+
+Total time: 1 minutes 6 seconds
+15:40:54 patrick@linawesome mallet$ exit
+exit
+
+Script done on Mon 22 Feb 2016 03:40:57 PM PST
+Script started on Mon 22 Feb 2016 03:43:19 PM PST
+15:43:19 patrick@linawesome mallet$ bin/mallet train-topics --input graham.mallet --num-topics 30 --optimize-in terval 1000 --output-state graham-state.gz --output-topic-keys graham_keys.csv --output-doc-topics graham_compo sition.csv --word-topic-counts-file graham_word_topic_counts.txt
+Mallet LDA: 30 topics, 5 topic bits, 11111 topic mask
+java.io.FileNotFoundException: graham.mallet (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:146)
+	at cc.mallet.types.InstanceList.load(InstanceList.java:787)
+	at cc.mallet.topics.tui.TopicTrainer.main(TopicTrainer.java:199)
+Unable to restore instance list graham.mallet: java.lang.IllegalArgumentException: Couldn't read InstanceList from file graham.mallet
+15:43:43 patrick@linawesome mallet$ bin/mallet train-topics --input graham.mallet --num-topics 30 --optimize-in terval 1000 --output-state graham-state.gz --output-topic-keys graham_keys.csv --output-doc-topics graham_compo sition.csv --word-topic-counts-file graham_word_topic_counts.txt
+Mallet LDA: 30 topics, 5 topic bits, 11111 topic mask
+Data loaded.
+max tokens: 152883
+total tokens: 152883
+<10> LL/token: -9.81682
+<20> LL/token: -9.48521
+<30> LL/token: -9.33362
+<40> LL/token: -9.23576
+
+0	0.16667	founders it's investors languages isn't feel didn't change raising wrote expect start you'd system close hire you're they've forces ideas 
+1	0.16667	startups software problem end money technology understand true don't it's wanted writing find means important successful couldn't hackers couple you're 
+2	0.16667	big that's design people work working valuable talk group turn easy angels general hear lisp customers interesting expected false leave 
+3	0.16667	it's hackers i'd funding years average hard money good wrong attention valuation huge you'd investor learn practice don't startup spend 
+4	0.16667	things people startup business code put works thought they'll version written friends meant create type apple real site explain stage 
+5	0.16667	startup you're kind number it's programming find can't stock business easier surprised firms fundraising trouble sort buy field search successful 
+6	0.16667	companies bad rich fact life valley experience people small projects give users you'll books project startup competitors lots servers created 
+7	0.16667	long hard angel imagine ten solve succeed number microsoft notice stop turned back realize performance head life position initial languages 
+8	0.16667	ideas day write it's real future idea we're vcs language investing problem thinking till random worry chance measure programmers american 
+9	0.16667	making point didn't set top fact doesn't reason worse good question job interested sort potential started weren't changed extent difficult 
+10	0.16667	make that's founders work you're school times big don't ago viaweb back math kind parents building companies people public pick 
+11	0.16667	don't spam years vcs you'll yahoo ways users recently software start hundred work doesn't filter stupid bubble wisdom competitors makes 
+12	0.16667	startups people users money can't kids start google didn't won't don't common place aren't point wouldn't essay simply there's combinator 
+13	0.16667	time company i'm build things startups startup investor investors money investments considered standards science process user matter ordinary grew round 
+14	0.16667	reason answer word it's important figure adults java principle expensive harder time amount age patents numbers rule invested inside fixed 
+15	0.16667	hard person realize designed avoid test good sign places computer century ambitious running game poor story fields consulting that's front 
+16	0.16667	case big good plan read made college world learn history things startups grad intelligence rule subject google line it's limit 
+17	0.16667	company they're working part i've pay growth worth things found they'd market individual we've reading advice happened smart software language 
+18	0.16667	lot programmers online round remember dollars talking company phase spread dangerous increasing afford function founders local conscious expenses check harvard 
+19	0.16667	people work means problems high live vcs talk won't things scale years show what's approach software save startup nature model 
+20	0.16667	make power startup effect applications news good patent starting friend learn spent million fast bet haven't single writing felt simple 
+21	0.16667	people work deal write program wrong email price thing decide what's lisp gradually social you'll page trend path taking job 
+22	0.16667	great year it's tend web college starting fund control run open raise wasn't silicon till venture seed people computer parts 
+23	0.16667	make you're work pretty wealth class guys learned writing they'll feel effort change longer lose problem groups returns develop paper 
+24	0.16667	lot don't happen started founder problems powerful source market stuff employees paid form support quickly there's city office told art 
+25	0.16667	time makes sense companies thought popular half worked don't good human predict world programming reason we'll options hand choose learning 
+26	0.16667	good idea start there's don't bad small advantage main words invest faster fast time painting kinds built it's deal discover 
+27	0.16667	startup make sell question young offer call don't terms problem they're application audience investment generally months programming founders matters win 
+28	0.16667	thing world language people things large job work lisp find mind they're time supposed early mistake give increase money realized 
+29	0.16667	investors lot made good thing programs matter grow high you're company move increasingly i'm doesn't raise meet microsoft theory inequality 
+
+<50> LL/token: -9.16836
+<60> LL/token: -9.11728
+<70> LL/token: -9.07829
+<80> LL/token: -9.04695
+<90> LL/token: -9.00748
+
+0	0.16667	founders it's languages investors change feel you'd isn't close wrote web-based expect raising interesting existing performance system hire selling meeting 
+1	0.16667	don't software startups writing important money technology means end true wanted understand problem test list cost couldn't side rounds difference 
+2	0.16667	work making talk big programming they're lisp turn apple easy college life design valuable general angels invest hear interesting that's 
+3	0.16667	it's hard startup funding i'd average learned huge spend attention live evidence till years internet longer python game start growing 
+4	0.16667	people things startup lot investors thought code real put solve works written programmers version meant buy students couple create program 
+5	0.16667	startup kind it's business number can't valley product hackers you're successful wrong fundraising surprised obvious trouble easier find individual research 
+6	0.16667	companies bad company you're fact small rich users people type experience competitors projects life you'll programmers books initial servers they've 
+7	0.16667	long doesn't back realize hard angel imagine ten online good notice stop biggest size position spent people worst part head 
+8	0.16667	ideas vcs day future we're write thinking till series investing problem news running it's short worry sign american chance promising 
+9	0.16667	sort started set weren't top offer search potential fail kill strange begin tests week heads suggests factor plenty point manage 
+10	0.16667	that's big you're school make founders language times reason answer people jobs work ago remember viaweb math quality public parents 
+11	0.16667	start don't years makes spam you'll work yahoo ways recently hundred left stay wisdom ignore deal fortunately stupid lead economy 
+12	0.16667	startups money didn't people users kids can't point start google there's place simply they'll aren't read don't hacker economic won't 
+13	0.16667	time i'm startup wouldn't matter investor build startups process stuff user things university development century page investments ordinary considered round 
+14	0.16667	it's word reason rule amount dangerous java patents expensive hard told depends guy invested happy couple fixed beautiful isn't food 
+15	0.16667	person places theory talking poor avoid telling you'll surprisingly consulting doubt ambitious surprises costs common confident claiming lies quit decisions 
+16	0.16667	case group plan stock grad single google read college missing difficult afford boss copy approach subject limit career depend started 
+17	0.16667	they're working i've idea market pay they'd company worth growth we've reading computers round found advice partly sense types figure 
+18	0.16667	dollars bugs respect knowing necessarily spending conscious wasting subject function traffic coincidence cofounder principles makers national counterintuitive lives cars publishing 
+19	0.16667	people things computer part means won't bought situation filters steve machine show middle goal save release standard prevent approach popular 
+20	0.16667	make learn million fast power applications good starting free care interested patent time valuation felt bet truth haven't safe programming 
+21	0.16667	job write lisp what's people designed work email price wrong thing program stage sites essays face path gradually interest sentence 
+22	0.16667	great year tend raise web run model business starting control decide open people current slow seed weeks college country play 
+23	0.16667	work wealth pretty guys effort you're people hardware that's line lose discover class measure ambitious bill false returns develop town 
+24	0.16667	problems source powerful happen form there's employees office stuff art i'd age support schools rest founders mail city firm treat 
+25	0.16667	half worked takes choose they're predict phase learning initially skill founded options we'll signs arguably checks happening reach remarkable distinct 
+26	0.16667	good idea company deal deals advantage founder main time painting kinds desktop surprising words demo meet danger corporate york article 
+27	0.16667	make problem question smart essay months win young good call terms sell generally there's low application investment audience site history 
+28	0.16667	world thing find language things early time large silicon give people mind supposed called realized hacking convince mistake government writers 
+29	0.16667	lot investors made high common programs microsoft you've good company grow thing data combinator move adults increasingly i'm book cases 
+
+<100> LL/token: -8.98655
+<110> LL/token: -8.94936
+<120> LL/token: -8.93911
+<130> LL/token: -8.91769
+<140> LL/token: -8.90096
+
+0	0.16667	it's founders languages feel change isn't you'd couple kids raising close person expect web-based system wrote performance hire existing past 
+1	0.16667	don't startups writing important hackers technology end software wanted understand money true list test avoid couldn't rounds side difference means 
+2	0.16667	lisp making design college life talk invest work interesting working essay turn valuable easy customers angels focus apple programming offer 
+3	0.16667	hard i'd average sort attention learned it's patent public intelligence deliberately prefer leave groups growing decided computers fred cut till 
+4	0.16667	people startup things investors lot thought code program put students version works meant programmers create fund i've questions solve taking 
+5	0.16667	it's startup kind business wrong number programming successful product make powerful valley fundraising general succeed obvious easier surprised trouble employees 
+6	0.16667	companies bad company fact small users rich means programmers type talking experience competitors projects you're project turned days they've books 
+7	0.16667	doesn't long back realize part buy hard angel ten online good biggest head fast spent founders person bought imagine ordinary 
+8	0.16667	ideas vcs write language day future thinking we're problem till raise worry series half you're history sign short money random 
+9	0.16667	started sort guy week rules forced potential factor badly equity undergrads essays intended defined letting risky bottom tended impressed awkward 
+10	0.16667	you're make big that's work reason school real times answer jobs ago people viaweb parents quality remember time user chance 
+11	0.16667	start years you'll makes spam don't search round ways that's recently kind yahoo work hundred century term filter stupid thousand 
+12	0.16667	startups money good didn't don't can't there's users point google won't they'll kids place spend simply aren't economic hacker weren't 
+13	0.16667	time things startups wouldn't stuff matter sense startup funding i'm investor build class process move principle found hope university page 
+14	0.16667	word told rule patents dangerous java amount expensive write depends confident beautiful extreme develop customer tests source hear skill food 
+15	0.16667	places practice surprisingly called directly decisions knowledge usual powerful mark lies credentials distraction correct build movie winning picking we'll trajectory 
+16	0.16667	case read plan group grad single call theory release subject immediately difficult stay solve audience copy career costs depend feels 
+17	0.16667	they're idea software market working pay they'd worth growth i've what's months figure we've firms reading advice smart support evidence 
+18	0.16667	expert relationship requires started ford counterintuitive middle similarly expressions evolution chances credit concentrated he's fraction compensate occurs ultimate beat reflect 
+19	0.16667	situation filters goal save social slightly purpose die standard middle discover show due solved option partly definite final worried delay 
+20	0.16667	learn make starting time good million power applications care free valuation fast people's programmer interested bet multiple board simple felt 
+21	0.16667	job live price control designed original path invested opportunity recent examples home concept article property lucky surprises push wozniak strong 
+22	0.16667	great year tend web run deal model decide worse open wasn't approach people gradually dollars slow seed stop quickly current 
+23	0.16667	work problem wealth computer pretty guys ambitious effort book false organizations measure force line idea hardware returns poor town fear 
+24	0.16667	problems happen form art office investing source increase rest we'd treat schools love mail designed shows extent paid points age 
+25	0.16667	email takes choose worked initially options we'll team consulting revenues sites stick funds phase richer essays admissions engineers pull tools 
+26	0.16667	company good deals main founder set advantage idea internet number words kinds desktop deal meet painting york variation languages government 
+27	0.16667	smart question site sell software young low application investment they're language kid means paper problem meaning python win terms reach 
+28	0.16667	thing find world give language i'm early large people running silicon company supposed mind types realized success mistake stage hacking 
+29	0.16667	lot investors made high common microsoft programs grow combinator you've rate risk data increasingly adults full return good sound stories 
+
+<150> LL/token: -8.89045
+<160> LL/token: -8.88535
+<170> LL/token: -8.87609
+<180> LL/token: -8.86456
+<190> LL/token: -8.85134
+
+0	0.16667	founders it's feel change person isn't question couple languages wrote expect hire short i'd effect fields today past sounds bugs 
+1	0.16667	don't money writing important technology software startups end means wanted true understand list hackers test cost avoid couldn't side difference 
+2	0.16667	lisp life working college talk interesting programming invest essay easy making work valuable that's customers knew win angels century expected 
+3	0.16667	i'd hard stop learned sort recently lose intelligence rule deliberately prefer public brain average players trevor marketing programs founded pool 
+4	0.16667	people startup things investors hard programmers thought code program put thing lot solve students works written create close questions group 
+5	0.16667	it's kind number business start wrong valley you'd product successful powerful called fundraising startup math individual surprised general trouble programming 
+6	0.16667	companies bad company small fact rich world users competitors experience talking means projects internet project days turned practice initial type 
+7	0.16667	long doesn't back realize founders part buy web ten online pick bought ordinary machine worst firm message capital biggest managers 
+8	0.16667	ideas vcs write day till future raise you're we're worry language thinking doesn't history stock series random hours sign inequality 
+9	0.16667	guy factor derived allowed equity badly odd dollar depends figure trees peers leaving door producing writes flying official fourth engaging 
+10	0.16667	make you're work big that's reason school real answer times jobs angel viaweb ago remember generally parents building quality startups 
+11	0.16667	start years you'll makes spam round yahoo search ways lot hundred business face give filter potential ignore truth numbers wisdom 
+12	0.16667	good startups don't money can't didn't there's users kids google won't they'll point place simply spend friends harder aren't working 
+13	0.16667	time startups i'm wouldn't matter stuff sense funding found build designed investor news process move things paid class university predict 
+14	0.16667	word dangerous java told develop confident food patents week depends stick perfect learning reaction weight pay respect external mathematicians explains 
+15	0.16667	points colleges roughly article prices counterintuitive poverty believed picking eating proposing probability independent buy schlep teams instance leonardo valuation they'd 
+16	0.16667	case grad single smaller subject piece immediately plan costs read theory afraid improve cool career publishing secret reward lets formidable 
+17	0.16667	they're idea software they'd worth market pay growth i've smart what's making months attention reading advice offer we've partly figure 
+18	0.16667	focus efficient argument versions territory lawyer bill fatal coincidence mixed occurs experts servers demoralized continue broader quarter loved expert standardized 
+19	0.16667	pretty kinds situation filters goal middle wait die imagine designers protect slightly due mentioned stage qualities admit continue worried impossible 
+20	0.16667	time started learn starting make fast million applications system form free valuation patent cases people's worked places programmer care interested 
+21	0.16667	job live government assume startups original concept products biggest lucky hate functions fit stage raised paintings imagination hold importantly engineering 
+22	0.16667	great year deal tend run decide control current open mistake dollars worse gradually produce standard language approach productive boston consulting 
+23	0.16667	problem work wealth design hackers computer fund idea average ambitious effort false half hardware force book organizations returns surprise town 
+24	0.16667	problems source office investing art rest happen treat mail increase city schools shows fortunately feels handful extent teach hackers opportunity 
+25	0.16667	essays organization worked character invested brand buildings appeared funds express lists cheaply consists picture understand annoying flaws takes likes readability 
+26	0.16667	company deals words founder main advantage popular set top painting languages success desktop sitting corporate waste meetings underlying attract imagine 
+27	0.16667	site email sell price application audience programs problem smart young terms venture initially low bubble meaning that's you're kid separate 
+28	0.16667	find language company thing early large give silicon read running i'm mind sort supposed model world languages types turns fail 
+29	0.16667	lot made common high microsoft grow thing combinator you've adults rate data risk full programs return mistaken sound lower nature 
+
+<200> LL/token: -8.84305
+<210> LL/token: -8.84005
+<220> LL/token: -8.8336
+<230> LL/token: -8.82077
+<240> LL/token: -8.81445
+
+0	0.16667	founders feel change question i'd isn't person happen languages raising couple expect rate wrote effect i'm hire increasingly short sounds 
+1	0.16667	don't software means technology startups end wanted writing understand true round list test cost couldn't rounds avoid takes difference funded 
+2	0.16667	work lisp programming that's college life talk interesting invest making essay easy valuable customers win design angels knew recently working 
+3	0.16667	learned java lose stop deliberately feature sales trevor helps i'd allowed sort marketing networks sold pool paintings possibly fashions sam 
+4	0.16667	people startup things investors hard lot programmers thought code program put it's version solve plan works apple designed meant close 
+5	0.16667	it's business start kind number successful valley you'd product wrong powerful power tend growth called general surprised fundraising math trouble 
+6	0.16667	companies bad company fact world small early competitors combinator experience users projects told project days type turned practice talking rich 
+7	0.16667	back doesn't long realize part terms buy random web ordinary worst groups message advantages act cheaper directly purpose bet bought 
+8	0.16667	ideas write vcs day language raise future till we're doesn't stock free worry wasn't head people's age hours buy mistaken 
+9	0.16667	strategy trolls individual leaving lame lets model iphone pushing explicitly basic suit trees author succinctness equity median weakness cash cut 
+10	0.16667	make you're big that's work school important real reason times answer angel jobs ago market sell building parents online large 
+11	0.16667	years you'll makes start spam yahoo search ways hundred performance face offer months filter potential stay ignore economy wisdom book 
+12	0.16667	good startups money can't don't didn't users there's working kids point google won't they'll great simply spend place amount harder 
+13	0.16667	time i'm wouldn't matter sense startups funding build stuff web ten found news investor move process low principle places order 
+14	0.16667	word pay dangerous biggest main kid save mail develop what's week looked respect history outsiders war effectively lived reaction background 
+15	0.16667	game capital common optimization appeared appeal answer visit deliver avoid laugh suggestion trends mac twenties degree room standardized machines grown 
+16	0.16667	case bill investment eminent optimal businesses facto publishing clean influenced improve charge scientists bank specifically date opportunity paragraph access exception 
+17	0.16667	they're idea i've software they'd hackers worth writing making smart attention we've firms reading effort advice pay what's surprising longer 
+18	0.16667	odds partner union wall pick political conceal core sink winner series translate flow varies drafts widespread dark north slope absolutely 
+19	0.16667	filters situation operating kinds mentioned continue due increasing strong development we're basically forced era protect technological ground easier ceos tended 
+20	0.16667	learn starting fast million started system worked choose form set turn interested patent cases steve programmer server ability lead decided 
+21	0.16667	grad return assume government university follow invested determination hub depend hold hate title tokens market applicants engineering errands phone parallel 
+22	0.16667	year great run deal live decide approach control current case open hope dollars release internet produce suppose boston turns worse 
+23	0.16667	problem work wealth design average hackers half computer valuation series ambitious organizations idea stuff force precisely returns hardware sound simple 
+24	0.16667	problems source deal art hear investing they've theory schools city treat shows extent fortunately teach rest relationship didn't office percentage 
+25	0.16667	line who've accident years inequality lists applies curiosity needed arts arrive habits latest network domains explained younger hardest notation dropbox 
+26	0.16667	company advantage deals popular languages words founder painting desktop wait success felt top discover main middle asked grew push sitting 
+27	0.16667	programs site email price smart young application problem thinking audience initially venture meaning separate noticed dealing applications twenty decisions prevent 
+28	0.16667	thing language find company give sort read rich running silicon model large care computers world supposed mind stage love types 
+29	0.16667	made lot high job microsoft common reason group grow applications you've risk adults public software vcs pick judge higher lower 
+
+<250> LL/token: -8.80306
+<260> LL/token: -8.79767
+<270> LL/token: -8.79863
+<280> LL/token: -8.78527
+<290> LL/token: -8.79194
+
+0	0.16667	founders feel change question isn't happen tend languages expect rate effect existing patents increasingly short hardware today move i'm turns 
+1	0.16667	don't writing software means technology end wanted understand startups true round list realize cost couldn't rounds takes notice funded success 
+2	0.16667	work lisp programming college life started making interesting invest million working easy essay valuable turn customers win angels knew recently 
+3	0.16667	java mail pick capital easily open corpus recent curiosity undergrads carefully allowed situation kill signs century law inequality deliberately tells 
+4	0.16667	people startup things investors lot hard programmers thought long put program thinking it's code students version plan written solve works 
+5	0.16667	it's start kind business number successful i'd wrong valley powerful power you'd growth fundraising called individual general easier surprised dangerous 
+6	0.16667	companies company bad fact world small early pretty talking experience competitors combinator told type project practice initial office books projects 
+7	0.16667	doesn't back part terms learned long spend groups realized century worst realize lower paper happy valuations ordinary buy standard phase 
+8	0.16667	ideas write vcs language till future raise languages young buy free day we're head remember shouldn't people's spent age wasn't 
+9	0.16667	bit default investors straightforward taking legal fashion successes generating body evolved sold implicit forced cut odd raised explicit moved main 
+10	0.16667	make you're work big that's school reason important real market answer times wouldn't angel large ago series jobs sell online 
+11	0.16667	years you'll makes search person yahoo ways offer hundred performance spam leave filter book stay potential he's sentence revenues wisdom 
+12	0.16667	good startups money don't users can't didn't there's great kids point google talk won't working they'll place amount aren't found 
+13	0.16667	time i'm matter web sense stuff funding build process ten news paid low application places order month business building predict 
+14	0.16667	word main history discover page week looked they'll stick mine prefer speed mit papers die reporters won wouldn't rare subset 
+15	0.16667	game consciously charge optimization cares company's grown towns circumstances hour winner race proposing track missing apple's sensitive door eliminate recipes 
+16	0.16667	intellectual separate eminent vcs techniques weight message key suits peers apple optimal fortran forgotten compiler rest benevolent lists salaries browser 
+17	0.16667	they're idea software hackers i've pay they'd smart what's reason we've firms advice biggest attention partly reading longer months making 
+18	0.16667	ambitious reaction painful design team brought prepared decreased manager's striking address degree ignore attempt instance clinton light assemble compensate adjust 
+19	0.16667	operating respect due depend consulting bug strong morale account impossible fight air drives counterintuitive ceos style carry engage pass deal 
+20	0.16667	learn starting fast system avoid form choose worked set year interested patent steve needed numbers server cases ability deciding productivity 
+21	0.16667	government hold wozniak period details center strategy outsiders assume lying impression reasonable elements table stretch bill store launching inborn box 
+22	0.16667	deal case year run live decide control current gradually full hope approach spread truth produce tend boston invested release suppose 
+23	0.16667	problem wealth company computer average spam design half idea false returns organizations simple sound science hackers opposite sufficiently valuation hire 
+24	0.16667	problems source internet they've schools sign theory fortunately valuation extent exist convince kid opportunity percentage evil ceo coincidence pressure relationship 
+25	0.16667	complete equally grad reputation freedom employee turning phase statistical players union vote feet thesis regard fairly service similarly tools sake 
+26	0.16667	deals founder top popular imagine painting company advantage desktop wait words develop probability town war encourage grew middle random sitting 
+27	0.16667	microsoft programs email site art price days smart filters venture natural generate conservative rest macros stores projects bound systems ignore 
+28	0.16667	thing find language give rich sort read you've investor running model silicon company care world supposed computers love mind types 
+29	0.16667	made job high common group grow applications vcs fund data adults public risk you're worry hours promising stories standards test 
+
+<300> LL/token: -8.78665
+<310> LL/token: -8.77978
+<320> LL/token: -8.7841
+<330> LL/token: -8.77551
+<340> LL/token: -8.78632
+
+0	0.16667	founders problems feel question change isn't happen i'm effect languages succeed expect move existing increasingly person patents mistake java short 
+1	0.16667	don't writing means software technology end ideas startups wanted understand true list round meant couldn't cost rounds figure wealth funded 
+2	0.16667	that's lisp programming started college life invest million easy interesting turn work valuable test working knew turned win essay friend 
+3	0.16667	show play easily fortran suddenly increase fraction attention charge useless influence mail microsoft's exception greatest publishing world's brilliant trevor mix 
+4	0.16667	people startup things investors lot it's hard programmers day thought long program put thinking students solve apple design works version 
+5	0.16667	it's start kind business number successful wrong i'd valley you'd powerful languages growth power fundraising general easier individual surprised math 
+6	0.16667	company companies bad world fact small early tend microsoft type pretty worry combinator projects project deal initial practice books dollars 
+7	0.16667	doesn't back buy terms long forces learned century worst face standard initially groups ten guy what's cheaper fall interesting smarter 
+8	0.16667	vcs write language ideas till future raise called remember free advantage code head longer spent stage wasn't shouldn't people's technical 
+9	0.16667	established drawing productivity afford painful ends bogus tendency crap david hypothesis feet rejection tells determination noise sales oddly grade harmless 
+10	0.16667	work make you're big that's school important real market wouldn't times reason angel simply code jobs ago series web sell 
+11	0.16667	years makes you'll search design ways offer performance book cases rest filter suspect stay leave hundred nature operating potential person 
+12	0.16667	good startups don't money users can't didn't there's great kids working point google won't they'll talk we're amount couple spend 
+13	0.16667	time stuff matter i'm build sense funding paid low places month machine ignore predict paying ten late web essays country 
+14	0.16667	word history famous large die perl directly man you'll discover fashion generation proportionate generate i'd lack sam differences mine basic 
+15	0.16667	universities state make topics details wasting spirit macro conditions turn chances programs manager's quote successes recent apple's hardest touch body 
+16	0.16667	experience hadn't intellectual badly eminent desktop tricks countries freedom suits hate lets fewer top readers legal helps twentieth argue hacker's 
+17	0.16667	they're idea hackers i've reason smart making pay they'd months words firms reading investing biggest advice attention partly we'd meeting 
+18	0.16667	writer catch bound assumption compiler french economies speaking status reject questions eyes consistently switched master gains map approaches riding loud 
+19	0.16667	measure speed death employee bug grasp claiming acquirer formidable period greater mode cobol sciences government poverty entire generate chain shower 
+20	0.16667	learn starting fast system year set avoid worked interested ability numbers message america audience boston deciding needed options path summer 
+21	0.16667	government behavior unions producing scheme sex judgement bigger hub paint dying characters creative distinctive continue huge families suggestion priority unnecessary 
+22	0.16667	case run main you'll deal decide year control current full hope gradually truth deliberately suppose broken parts live prevent invested 
+23	0.16667	problem realize spam computer average wealth half hire false they've ambitious organizations return company precisely approach returns sound board simple 
+24	0.16667	source internet valuation default silicon we'll fortunately exist schools rich mistakes patent percentage cut situations mail ready include ceo forced 
+25	0.16667	article stick complete immigration press trees attack merchants hierarchy alarms distraction desire shot believing external involve obscure bias someone's guide 
+26	0.16667	founder deals imagine popular painting top probability yahoo wait desktop push degree valuations grew core bunch lines require studying encourage 
+27	0.16667	programs site email angels art days i'm left filters stupid he'd fun syntax net office revenues phrase natural bit income 
+28	0.16667	thing find software give sort rich you've read language investor running large competitors model silicon supposed computers love good types 
+29	0.16667	made job high common group risk fund public applications lose human hours grow inequality grad promising steve considered profitable stories 
+
+<350> LL/token: -8.78515
+<360> LL/token: -8.78028
+<370> LL/token: -8.79896
+<380> LL/token: -8.78122
+<390> LL/token: -8.79773
+
+0	0.16667	founders languages problems i'm feel person isn't happen effect source couple expect succeed surprised move existing small mistake short patents 
+1	0.16667	software means writing technology startups end wanted realize round understand ideas list product don't cost meant couldn't figure side rounds 
+2	0.16667	that's lisp programming college started real invest million easy life turn interesting valuable work customers language class office running taking 
+3	0.16667	mail play business simply bought attitude checks morning fortran leading proposing hits tendency quick obsolete sucked recruiting suburbia variable abuse 
+4	0.16667	people startup it's things investors lot hard long programmers day thought design put thinking program apple grow version written solve 
+5	0.16667	start it's kind number successful wrong business valley you'd powerful growth power fundraising general individual live math difference building employees 
+6	0.16667	company companies bad world fact tend deal early small microsoft worry combinator pretty project projects told initial explain java important 
+7	0.16667	doesn't back buy learned recently century forces initially direction cheaper apparently worst interesting guy attract fly code measured lose learning 
+8	0.16667	ideas vcs write till future business raise young language found nerds wasn't technical shouldn't people's remember position investment meet chance 
+9	0.16667	boston opportunity lead noise choice governments treated process differently trees windows increased earliest hit classic produced pass oil guess undergrads 
+10	0.16667	work you're make big school market important wouldn't worth code times that's jobs essay angel series ago simply mind choose 
+11	0.16667	years you'll makes learn funding deals ways search book hundred performance increase things painting design measure leave potential filter offer 
+12	0.16667	don't good startups money users can't didn't working great there's kids point google talk won't they'll i'd part we're place 
+13	0.16667	time stuff matter change sense build web ten paid i'm places face bet month machine higher country telling ignore function 
+14	0.16667	history thousands directly generate basic pretty paintings word delay helped objects opportunities reputation tells rely chunk happier beat worried importantly 
+15	0.16667	longer readers feel departments correct tiny afterward claiming grad architects assumption object henry mode momentum cash measures trajectory upwind asks 
+16	0.16667	invested hadn't major hate millions end prepared painful credentials picking simple date areas comparatively grades cycles counts insist iphone payments 
+17	0.16667	they're idea reason hackers making i've they'd pay smart question investing we've attention reading firms advice partly rule biggest we'd 
+18	0.16667	raise writer pattern thinks era intended direct apps client effective flow who've speaking mystery comments perl positive scripting player shared 
+19	0.16667	profitability determination stores grasp founded precise popular complain collection applied driving statistical bogus turned stress proof addictive valuation demand manager's 
+20	0.16667	fast worked interested size set ability avoid we'll books shows numbers die teach options designers europe manage humans role odds 
+21	0.16667	test sounds underlying acquisition sex suggests miss pushing numbers plan discussion abstractions fixing magazines quiet latest offered switching polls mixed 
+22	0.16667	case run you'll main imagine control decide effort write realized assume turned wisdom probability economy truth advantages months suppose robert 
+23	0.16667	problem wealth spam average half notice approach computer hire organizations returns development precisely board society sit paper town rest surprise 
+24	0.16667	valuation schools internet fortunately inside avoid afford cities silicon remember deciding area pain situations amounts painters mentioned labels surely ambition 
+25	0.16667	article buildings survive odd overcome increases mouth conventional ratio west spectrum sharp chunks seat rational taxes hubs north dev url 
+26	0.16667	founder top word yahoo faster desktop matters fields rapidly essays time wait valuations grew considered popular universities develop apply text 
+27	0.16667	programs art days give angels starting email stupid fun stage cars he'd computer syntax key death site mine prestige understanding 
+28	0.16667	thing find language read large rich sort you've investor give experience model system competitors back supposed data success love spam 
+29	0.16667	made job year high common applications fund terms adults group rate types human filters hours lower public standards research lose 
+
+<400> LL/token: -8.77419
+<410> LL/token: -8.7667
+<420> LL/token: -8.76194
+<430> LL/token: -8.75591
+<440> LL/token: -8.76342
+
+0	0.16667	founders i'm languages problems feel change isn't happen source person succeed worse move mistake short application gradually today expensive writers 
+1	0.16667	software startups means writing technology end realize ideas don't understand list starting round wanted side rounds designed they've control couldn't 
+2	0.16667	that's lisp programming language started college life invest wealth real million easy running turn valuable students test stock surprised office 
+3	0.16667	mail industry hadn't potential future organic advantages improve engineers curve essays base connection play issues speech releases managers minor conditions 
+4	0.16667	people it's startup things lot investors hard make long programmers day thought give program answer silicon thinking apple design grow 
+5	0.16667	start kind business number successful learn wrong valley you'd powerful power growth rich fundraising easier math general individual computers investors 
+6	0.16667	company companies bad world small fact deal tend early product microsoft word combinator pretty worry told projects project grad type 
+7	0.16667	doesn't buy interesting back free learned recently century returns theory guy read startups apparently opinions fall hit forces writer evolve 
+8	0.16667	vcs write ideas language till raise future young found remember nerds wasn't shouldn't position people's meet chance predict groups mistaken 
+9	0.16667	technical put boston lead attract eventually literature amounts practical employee suit minutes occasionally age frightening counterintuitive attitude differently earnings raise 
+10	0.16667	work you're make big school important code market wouldn't web worth times essay angel true simply ago series jobs mind 
+11	0.16667	years deals funding search design ways public painting book performance approach live force yahoo specific we'd business professors evidence filter 
+12	0.16667	good don't money startups users can't didn't there's great working kids point won't i'd talk google part they'll place couple 
+13	0.16667	time sense build matter stuff paid investment face places month bet higher hundred actual ignore country changed organization function government 
+14	0.16667	history friend class directly fashion worried decision commitment state discussion paintings helped disasters decreases alive care select abuse intellectually aggressive 
+15	0.16667	longer readers article implies beat account cool fewer increase mode lived architects cash collection buildings appeared inequality statements intelligence domains 
+16	0.16667	spent exist larry significant realized enjoy engineering opportunities conceal propose leverage painful agreement moved irresponsible sketch lots odd asked instances 
+17	0.16667	they're idea reason hackers making smart they'd question pay i've words months software attention investing starting talking reading job biggest 
+18	0.16667	founder trade mentioned conventional apps dollar achieve remarkable microsoft we're schleps likes momentum explaining credit functions cover invented publish convert 
+19	0.16667	generate confidence managers stores usual reproduce grew defined outsiders cambridge one's stress stressful feature solutions outcome remind sum app executives 
+20	0.16667	fast system worked set avoid size ability interested we'll options shows books protect lie humans telling europe character physical succeeding 
+21	0.16667	numbers include colleges straightforward inevitably student corp offered genuinely coast fixing greatest palo benefit front salaries compensate phd startups evolutionary 
+22	0.16667	you'll case main imagine email decide effort turned current probability full suppose realized spammers robert capital broken kill revenues driven 
+23	0.16667	problem spam average made computer notice form rest success half organizations investor return precisely board standard hire society sit describe 
+24	0.16667	stuff inside books mistakes potential situations decades turning additional closely conclusion iphone insiders terrible area immigration schools began cities defining 
+25	0.16667	share agree late acquired impressed entire ideally drives headers element network precise independent practice smallest slow manufacturing billion controversial accelerating 
+26	0.16667	popular top founder wait fail matters universities valuations lines faster rapidly path raised forms sufficiently center give yield completely hits 
+27	0.16667	programs art days stage angels built finally cheaper advice computer key starts opinion strange require fun death slowly demand cool 
+28	0.16667	thing find makes sort large you've read back model experience language rich software desktop data plan love investor line servers 
+29	0.16667	year high common made job group applications valuation fund rate terms partly patents lose figure sounds filters selling hours multiple 
+
+<450> LL/token: -8.75684
+<460> LL/token: -8.74859
+<470> LL/token: -8.7558
+<480> LL/token: -8.75758
+<490> LL/token: -8.73828
+
+0	0.16667	founders i'm feel languages problems change person happen source isn't increasingly mistake application age cheap discovered investments today writers message 
+1	0.16667	software means technology end realize understand round starting wanted list figure couldn't ideas control funded read interesting they've sign principle 
+2	0.16667	that's language lisp programming started college wealth invest type million easy running students valuable test life competitors stock taking notice 
+3	0.16667	food strange web situations title replaced experience offering drift visit statements underestimate sequoia quit probabilities closer door solid eating unnecessary 
+4	0.16667	people it's startup things investors make lot hard programmers writing long day give thought answer time program design put silicon 
+5	0.16667	start business kind number work rich successful learn wrong valley power plan fundraising growth email easier individual win life computers 
+6	0.16667	company companies bad world deal fact early tend product small you'd microsoft word pretty combinator worry meant create projects math 
+7	0.16667	doesn't back learned form free recently century buy theory human returns machine forces ordinary guy die smaller home apparently fall 
+8	0.16667	ideas vcs write till future raise language found young knew nerds wasn't friend position people's shouldn't hundred haven't face mistaken 
+9	0.16667	technical hours stick demand knowledge america solutions american literature speaker wozniak details wait perfectly precise moved building modern older incidentally 
+10	0.16667	work you're big make school important code wouldn't true made times web market angel simply jobs worth essay ago yahoo 
+11	0.16667	years makes funding live search ways stop public painting performance design cases increase force filter we'd evidence city guess late 
+12	0.16667	don't startups good money users can't didn't there's working great kids point google won't they'll i'd talk part we're what's 
+13	0.16667	time stuff build sense top matter paid investment places chance languages bet convince month fix country playing expensive hiring growth 
+14	0.16667	history universities games phenomenon imitating directly editors dress forms he's night positives prepared cover extraordinary attitudes discovery kinds brought steam 
+15	0.16667	longer completely bunch deals sense mode depending livingston cities reasonable sue closed defined beliefs standing process aiming pitch forget strategies 
+16	0.16667	push manage attract organic pressure current hubs ford describing familiar agreement convertible basically termsheet east obscure feedback studied lunch demoralizing 
+17	0.16667	they're idea reason hackers making i've smart they'd pay question words talking you'll ten powerful couple investing popular we've rule 
+18	0.16667	threshold tokens conventional property tradition definite sam stock picture population painters travel description company's factors algorithms proposing administrators they're instances 
+19	0.16667	reproduce ended initial humans conceal functions carry pie mac versions costs unpopular attempt heuristic chunks reached education sum cancer night 
+20	0.16667	real fast system set worked size interested play options shows numbers points syntax protect gates rest physical function cut poor 
+21	0.16667	front acquisition equity constant salary outsiders rejected replace achieve deciding browser differences high-level happier implicit readers record application didn't stress 
+22	0.16667	you'll case main imagine angels decide effort surprised full situation cost current realized suppose server-based robert book organization send kill 
+23	0.16667	problem spam average hire success building hardware return standard organizations surprise precisely society development science war software hack store sit 
+24	0.16667	lead firm beat mistakes determined decades error fine finally american network connection immigration productivity bear air counterintuitive total closer capable 
+25	0.16667	bit path pages implies lets risks behavior piece waste opposite solution spare opportunities palo ugly hypothesis table probability larry overcome 
+26	0.16667	founder approach talk describe company valuations board lines matters state universities top distraction mine letting eat engineers fixing coast child 
+27	0.16667	programs art internet days effect stage built support happening cool opinion longer require necessarily starts tests advice switch morris attitude 
+28	0.16667	thing find sort large you've investor software back group model experience read supposed left servers data line love release employees 
+29	0.16667	year job common made applications high valuation fund fact terms partly patents types expected lose filters short groups selling sounds 
+
+<500> LL/token: -8.74737
+<510> LL/token: -8.75791
+<520> LL/token: -8.74554
+<530> LL/token: -8.74039
+<540> LL/token: -8.74287
+
+0	0.16667	founders i'm problems languages feel change person isn't happen essay source increasingly mistake application age today power writers discovered investments 
+1	0.16667	software means technology end realize understand round build figure control move place funded succeed list sign principle show social surprising 
+2	0.16667	that's language lisp programming college wealth started invest million easy interesting type valuable matter life students stock running class office 
+3	0.16667	phenomenon company's confidence replaced reading title probabilities lines americans twenties air state black movie world's expect treat chair readers microcomputer 
+4	0.16667	people it's startup things investors make lot time hard long writing programmers give design day wanted program answer thinking put 
+5	0.16667	start business kind number years problem successful rich making valley learn wrong plan fundraising email general individual life rounds hacker 
+6	0.16667	company companies bad world deal fact tend problem small starting product early microsoft word you'd pretty worry meant viaweb avoid 
+7	0.16667	doesn't buy back free form measure theory smaller forces returns firm learned changed century apparently sentence stay famous content mentioned 
+8	0.16667	ideas vcs write language future raise till found care young months knew friend wasn't shouldn't hire nerds face predict haven't 
+9	0.16667	creating knowledge cities team man secret paintings precise silicon hour naive coming conclusions largely ibm introduced employer luxury advise zero-sum 
+10	0.16667	work you're big make school important code wouldn't market web worth times true angel jobs choose online simply sell offer 
+11	0.16667	makes funding years search live ways stop force performance recently cases we'd public leave average filter culture one's evidence kid 
+12	0.16667	don't startups good money users can't didn't there's working great kids point won't talk i'd they'll google part we're job 
+13	0.16667	stuff sense time interested growth paid fix places expensive bet american month common investment simply python languages return lives home 
+14	0.16667	original implement weird honest cheaply committee fatal travel teenagers selecting perfectly quick condition consciously normal heuristic identical demoralizing focusing scary 
+15	0.16667	principles trajectory applying enormously artists brought greatly forget sake genius e-commerce owned suppress worries constraints obstacles innovations satisfying theories nonspam 
+16	0.16667	deciding test writer text pressure depend slowly organic difference difficult insiders talked media constraint waste object industries define channel wave 
+17	0.16667	they're idea reason hackers i've smart pay question thought they'd you'll couple words talking ten investing we've turned advice head 
+18	0.16667	society possibly past teachers fear underestimate population correct feel smallest studied interface medical born manufacturing instances graham shockley angle essentially 
+19	0.16667	topic dinner late versions greater distinguish prospect limited bunch engines unnecessary chain tenth cared remind month surprising shared admired segway 
+20	0.16667	real fast system set guess stories play shows yahoo gates cut catch act human size harvard ago involved common trolls 
+21	0.16667	food necessarily investment error equity aware policy skills professor explicitly worked protect failed replace visible defined related chunks meaningful executive 
+22	0.16667	case you'll imagine main decide effort surprised current full realized situation audience development angels room list launch suppose robert giving 
+23	0.16667	spam building average success organizations york problem standard essays article lie capital fixed service fashion human surprise component science moment 
+24	0.16667	made failure finally history energy closer dead started conversations automatically bear lying employees discipline capable note multiple hate rejection ambition 
+25	0.16667	quality die surely hubs powerful lets proof attractive religion microcomputers david showed fundamental cheaper surprise sink stupidity count push involve 
+26	0.16667	founder universities worked board describe decided valuations approach route libraries major rule employee stick career lines dramatically eat parts worse 
+27	0.16667	effect art internet days longer technical support happening spammers extent multiple function cool machine evolve require paul cheaper larry perfect 
+28	0.16667	thing find sort large you've software group back read competitors investor data left professors experience practice employees model release servers 
+29	0.16667	year made high applications programs cost valuation fact fund partly common short single expected types lose sounds selling filters fields 
+
+<550> LL/token: -8.74776
+<560> LL/token: -8.75451
+<570> LL/token: -8.74278
+<580> LL/token: -8.73541
+<590> LL/token: -8.73398
+
+0	0.16667	founders i'm change languages till feel isn't person essay problems happen source worked investor increasingly application age founder chance mistake 
+1	0.16667	software means technology end round build place understand list succeed control move learned surprising nerds people's funded theory spread social 
+2	0.16667	that's programming lisp college started language wealth matter invest million type life valuable running stock students easy problems individual class 
+3	0.16667	realize smart prevent phenomenon slowly revenues replaced harvard pool effectively cares teenage perfectly importantly behave message high-level signs stripe dynamic 
+4	0.16667	people it's startup things make investors time lot hard writing long programmers design give wanted day program learn put thinking 
+5	0.16667	start years business number making kind successful rich valley wrong power growth plan email hacker model general fundraising art rounds 
+6	0.16667	company companies problem world bad fact deal starting tend early you'd small microsoft word product combinator worry stuff meant solve 
+7	0.16667	doesn't free form forces firm returns changed buy apparently effect ceo viaweb role stay smaller stand vary classes freedom state 
+8	0.16667	ideas vcs write language future raise found care job months young knew interesting friend hire face wasn't position realize wait 
+9	0.16667	cities choice topic leonardo worrying experiment obsolete benevolent specialized stupid maker's threat rent desperate played insiders hoping institution carefully raised 
+10	0.16667	work you're big reason school important code market wouldn't web programs worth sense true times group angel simply jobs make 
+11	0.16667	makes live search ways recently funding stop performance force investment leave public evidence late city he's we'd couple information original 
+12	0.16667	don't startups good money users can't didn't there's working great kids point google won't talk i'd we're they'll silicon what's 
+13	0.16667	buy words measure bad expensive return increase month eventually python bet ignore feel paid american stuff recent here's odds fix 
+14	0.16667	began readers stores beautiful suit committee convinced differences plans deliberately accept undergrad expense story basic bayesian tastes customs pitch harmless 
+15	0.16667	agree equal degree fix possibly rates genuinely vision fails adult bet wilson dead personal encouraging students impressive fly protocol accurate 
+16	0.16667	capital major distraction appeared groups honest figured varies roughly selection arguing feel flow lazy appealing doesn't pushed actor misleading chinese 
+17	0.16667	they're idea hackers you'll i've question they'd pay smart powerful high answer talking thought ten expect we've couple history turned 
+18	0.16667	society ibm stage trends politics stopped filtering fixing strings minute acting manage underestimate remind sat meet range box informal record 
+19	0.16667	giant pressure legal teacher who've automatically excuse bullshit involve factor greatest apple's shared date lucky broader static database examine doubly 
+20	0.16667	fast system line head act culture common organization hand improve types past catch paid finally involved country graduate national inevitably 
+21	0.16667	funding food write error players probabilities constant professor experience fire decide describe impression schleps consumers venture scheme readers decreasing argue 
+22	0.16667	case main imagine effort technical current you'll development left launch realized room server-based robert kill story decide complicated hold growing 
+23	0.16667	spam building average success organizations sit essays situation surprise human york sentence fixed lives solution necessarily attract odd literally economic 
+24	0.16667	standard failure gates including fewer thinks discipline hate fundraising straightforward conversations weird infrastructure powerful extremely note engineers alive degree included 
+25	0.16667	easily purpose surely kid developed additional parts startup's defined philosophy managers trend fundamental plausible implementing sending meanness education stages teachers 
+26	0.16667	founder universities libraries man discover related stick paintings ipo who's picture unlike rule travel tendency magazines equity reluctant engaging drugs 
+27	0.16667	internet days longer effect multiple cool looked cheaper spammers valuations intellectual larry front show easy broken require paul grows thoughts 
+28	0.16667	thing find back sort read large you've competitors site experience data practice kind professors release variation week software syntax end 
+29	0.16667	made real year applications common cost fund high single partly they've pick valuation audience lose expected gradually filters short selling 
+
+<600> LL/token: -8.73613
+<610> LL/token: -8.74063
+<620> LL/token: -8.73853
+<630> LL/token: -8.72714
+<640> LL/token: -8.71911
+
+0	0.16667	founders change till person isn't essay i'm feel source languages worked mistake application investor increasingly full worse age today quickly 
+1	0.16667	software means technology end realize round list place succeed learned parents understand project vcs nerds surprising principle build control seed 
+2	0.16667	that's language lisp college started wealth matter programming invest million easy running students valuable stock easier office guys taking open 
+3	0.16667	prevent level revenues revenue reach phenomenon edge harvard pool attitude appeal professor succinctness lines introduce dangerous quiet effectively token eye 
+4	0.16667	people it's startup make things investors time lot hard writing long give design day learn problems wanted program put happen 
+5	0.16667	start years business kind number making successful wrong life valley power growth rich model fundraising win email angels individual general 
+6	0.16667	company companies problem bad world fact deal small tend starting early you'd stuff i'm microsoft word average combinator worry create 
+7	0.16667	doesn't form free effect forces stay firm potential changed ceo role hit conservative mentioned robert viaweb outcome add require freedom 
+8	0.16667	ideas write vcs language raise future interesting care months decide friend hire stop shouldn't face convince wait pretty start poor 
+9	0.16667	distinction worrying habit connection finance blub pretend faces rolling wasn't mix transformed heuristic shocking probabilities offered proxy owned arranged leap 
+10	0.16667	work you're big reason school important code market wouldn't programs web worth true times run group angel simply jobs yahoo 
+11	0.16667	makes funding search ways meant programming recently performance investment public success applications leave kid desktop he's one's growing america original 
+12	0.16667	don't startups good money users can't didn't there's working great kids job won't google talk i'd they'll point silicon languages 
+13	0.16667	buy feel paid we'd expensive fix places american return python i'll ignore position head measure story local here's opinion odds 
+14	0.16667	viaweb variation boss check readers practically standards special rise emails rich teacher prices rarely conceal committee rule surprise houses senses 
+15	0.16667	degree equal markets store clean identical send elite acquisitions accurate clever intellectual constant similarly apple japanese laugh preferred arrived seconds 
+16	0.16667	simple easily developing children territory programmers spread insiders hundreds ford arguing truth americans values eliminate invent readability removed university engage 
+17	0.16667	they're idea hackers i've you'll case smart they'd pay question powerful high fast couple terms thought expect we've attention talking 
+18	0.16667	straightforward decision bit possibility read models limits risky florence cities sat condition patents voted dying exclusively background noticing fortune salary 
+19	0.16667	slightly ipo bear sold alto visual editors helping burn began mails lazy trust explore european city infringement newton valid imitating 
+20	0.16667	hand apparently country head huge involved act common national stick signs dealing shape bubble choosing pushing additional previous graduate immigration 
+21	0.16667	venture board inside initial giant developed bound sites central air print mediocre probabilities scheme defense fifty tenth flying comment visitors 
+22	0.16667	main imagine you'll current situation left development effort multiple town room kill house beautiful page lost solved sergey technical colleges 
+23	0.16667	spam thinking solution organizations felt corporate purpose thousands designing fixed fashion literally factor positives depend components odd offices character center 
+24	0.16667	standard organization realize including sort literature difference accident alive legal defined launched actual reward drives consumers resist abstract speak applied 
+25	0.16667	relative mystery dangerous lives industries era caught conditions forgotten subtle delighted red charisma hoped included employer cross vesting treating genuine 
+26	0.16667	names starts man libraries suit percent slowly imagination equity metaphor describing median combine losing oil ultimately exception stressful switching user's 
+27	0.16667	internet days show longer young universities finally eventually hot filter driven looked extra philosophy broken month service plenty winners function 
+28	0.16667	thing find back large read sort competitors experience site software data you've employees technical produce trend practice clear launch inequality 
+29	0.16667	made real year common valuation cost partly fund single build sign lose expected pick chance filters groups types rest bugs 
+
+<650> LL/token: -8.72688
+<660> LL/token: -8.7289
+<670> LL/token: -8.72635
+<680> LL/token: -8.73541
+<690> LL/token: -8.73112
+
+0	0.16667	founders feel change isn't essay source person price founder advantage worse short current till sounds mistake age today application full 
+1	0.16667	software means technology end realize understand round place vcs problem model succeed parents effort advice surprising build learned principle simply 
+2	0.16667	that's language started lisp college wealth invest matter easy students pretty stock running rich investor office wrote guys valuable taking 
+3	0.16667	reach readers revenues level harvard easier edge undergrads revenue outsiders valuable beginning habit careful object browser efforts salary theoretical professor 
+4	0.16667	people it's startup make things investors time lot hard writing long give learn wanted day program problems design answer million 
+5	0.16667	start years business kind number making successful life wrong valley thought plan growth imagine spam fundraising general hacker art power 
+6	0.16667	company companies bad world problem fact small i'm starting tend programmers early stuff deal microsoft you'd word worth applications combinator 
+7	0.16667	doesn't form free viaweb effect felt potential standard variation power country robert changed describe means boring service ceo argument conservative 
+8	0.16667	ideas write language vcs future raise interesting found care months ten young friend hire shouldn't decide face java convince haven't 
+9	0.16667	prevent immigration drift producing operate train fighting circumstances undergrad origins connected mother blackwell irresponsible writes defined suburbs asks translates demoralized 
+10	0.16667	work you're big reason school important they're market code wouldn't web sense programs true times run group angel jobs yahoo 
+11	0.16667	makes programming funding live choose performance investment build leave public university created he's desktop kid information growing type afford america 
+12	0.16667	don't startups good money users can't didn't there's great working languages kids google job won't i'd talk they'll point part 
+13	0.16667	buy we'd return expensive ignore bugs american generate measure fix python i'll rare stick odds standards opinion looked meant perfect 
+14	0.16667	practically protect produce slowly special richer prove technique departments boss image morale viaweb differences rise similarly sequoia motives statistical stores 
+15	0.16667	gates facto cheaply shower river errands ways pretending join consequences presentations animal stocks def speaker artificial relentlessly fortunately administrators suitable 
+16	0.16667	deciding due description odd moving labels notes lazy arguing replace bring apartment bias territory venture solutions high-level length twenty recommend 
+17	0.16667	idea they're hackers you'll i've high smart case pay question they'd powerful fast words till talking attention couple terms expect 
+18	0.16667	lame here's legal models studying ground clean americans easy keeping independent latest decide ramen official condition hoped database enormous moderately 
+19	0.16667	slightly freedom role deliver phenomenon what's previous player reasonable noise internal working shares abstract amazon earnings rapid unpopular essentially proud 
+20	0.16667	raised national publishing limited title reading boss believed drafts firm disasters bill values channel connections detail touch call easiest spare 
+21	0.16667	intelligence inside succeeding advanced sold effects breaking depend blogging defense bogus email salaries dynamic modern zuckerberg standing tool proportion showed 
+22	0.16667	main situation development multiple town page room feels apparently nice parts situations choices discovered expressions buildings house benefit sergey combine 
+23	0.16667	spam original corporate thousands factor designing expenses components dealing fix optimization risky account convinced subset shorter sophisticated cofounder techniques applicants 
+24	0.16667	left confident launched corpus option technical definite code applied york outcome dev grades thumb couple side implicit manage meaningful screw 
+25	0.16667	impossible major mccarthy rate points honest ford drop turning picking walking caught term device morris talent record issue army phases 
+26	0.16667	site names pain super-angels starts organic investments sources brand naturally teacher peers hired useless describing everyday obstacle legitimate publishers vcs 
+27	0.16667	days longer show month eventually philosophy driven finally add extra taste plenty essays amounts forms winners bug fortran probabilities innovation 
+28	0.16667	thing find back sort read large competitors experience friends practice data turns support technical inequality built works site you've launch 
+29	0.16667	made real year common cost valuation partly single lose sign they've chance filters point nerds fund deal internet car groups 
+
+<700> LL/token: -8.726
+<710> LL/token: -8.72138
+<720> LL/token: -8.7226
+<730> LL/token: -8.73244
+<740> LL/token: -8.73203
+
+0	0.16667	founders change vcs person feel essay isn't source advantage problems stop effort worse current century news age sounds founder running 
+1	0.16667	software means technology realize end vcs place build simply round model understand remember succeed employees focus initial nerds common lisp 
+2	0.16667	that's language started matter invest college spam wealth easy investor valuable pretty lisp students office wrote easier guys difference open 
+3	0.16667	bought page surprise reach readers expert harvard implies strong revenues rise hits fix small publishers intrinsically address suggest behave ford 
+4	0.16667	people it's startup make things investors time lot hard writing long programmers give day design rich learn wanted reason product 
+5	0.16667	start years business kind making number successful valley life thought power growth year plan fundraising general art imagine wrong control 
+6	0.16667	company companies bad world problem fact deal small tend you'd starting microsoft worth word early applications i'm worry stuff math 
+7	0.16667	doesn't viaweb days effect free form potential felt firm variation clear shows describe founders changed robert ceo argument standard store 
+8	0.16667	ideas write raise future interesting found months ten decide head young friend care shouldn't false wait java goal offer vcs 
+9	0.16667	turning frightening immigration sources movies competing free circumstances text readability conditions delighted visit consumers aiming dumb breaks owners worries predictor 
+10	0.16667	work you're big important they're code market school wouldn't reason web programs true sense times run group angel jobs ago 
+11	0.16667	makes programming funding live choose meant public performance type taking created kid present he's university schools afford experiment growing built 
+12	0.16667	don't startups good money users can't there's working didn't great languages kids point google job won't talk they'll i'm silicon 
+13	0.16667	buy expensive american bugs ignore return interesting customer here's stock back opinion stick begin surprises wasn't generate perfect probabilities expressions 
+14	0.16667	python boss admit morale rarely longer teacher trevor ipo complain departments helped return differences capable defining express effects produced skills 
+15	0.16667	airbnb change state proof competitor magazine allowed obstacle article prove tenth brought url pointy-haired hands pleasure distractions walking information spoken 
+16	0.16667	view application patent beginning labels closely suppose articles positives confidence bother outsider altman careful helpful macro length wrong custom e.g 
+17	0.16667	idea they're hackers you'll i've high smart question pay till powerful case problem fast they'd couple talking words class terms 
+18	0.16667	traffic form bring clean keeping talked children fifteenth taboos asks special moderately condition modern voted supplier gates instincts sarbanes-oxley dilute 
+19	0.16667	based role reasonable extra previous extremely mark adult browser subject functions yields compare player standing similarly strange recipe constrained avoiding 
+20	0.16667	share draw territory title fear iphone statements thesis likewise background describing publishing driving failing internal record minor expectations happened disciplined 
+21	0.16667	intelligence character realized fear account formidable ahead fire suits paragraph attractive element invent einstein defense likes sink tokens calling advance 
+22	0.16667	win situation room extent town parts multiple completely home decrease situations choices batch gates paul who's colleges limited prices civil 
+23	0.16667	investment corporate trick original country percentage techniques left dealing games paint acceptable thousands innocent disadvantage talent ran implementing vote killed 
+24	0.16667	confident unusual inevitably pushing definite comparatively responsible forgotten root monopoly historically fifty writes greater eliminate editors renaissance lives feedback doomed 
+25	0.16667	add separate tests good recipe death sold reading honest merchants button chance spirit employer sat hacker's material rational aristotle desperate 
+26	0.16667	practically increasingly raising phrase names including bigger investments dev peers appeared cycle movie multiple stopped behavior fake service resist odd 
+27	0.16667	month longer taste nature eventually driven philosophy conscious occasionally supply include forms company's send plenty mid career finally essays that's 
+28	0.16667	thing find back read large sort made experience site friends data practice works technical show support order inequality college online 
+29	0.16667	real made year cost valuation fund partly common single lose sign car filters chance happy war average forced prefer grew 
+
+<750> LL/token: -8.73956
+<760> LL/token: -8.73868
+<770> LL/token: -8.73517
+<780> LL/token: -8.73246
+<790> LL/token: -8.73225
+
+0	0.16667	founders vcs feel change person running essay advantage source news stop difference worse century practice current today age situation number 
+1	0.16667	software means end realize place vcs round simply understand remember isn't quality reading focus succeed employees nerds common lisp surprising 
+2	0.16667	that's language started matter invest college wealth easy investor students real stock valuable care wrote ways guys taking building figure 
+3	0.16667	afford page told sciences surprise invented child shot attitude movie facebook speakers feet beliefs ads couple shower present-day implicitly disadvantage 
+4	0.16667	people startup it's make things investors time lot hard reason writing long programmers problems design give learn rich day wanted 
+5	0.16667	start years business kind making successful year number valley power growth combinator fundraising plan imagine general i've hacker economic rounds 
+6	0.16667	company companies world bad fact small deal starting problem tend technology i'm they'd stuff you'd early microsoft worth worry word 
+7	0.16667	doesn't founders raising form viaweb days effect free american potential variation felt clear shows thousand bad argument cities physical perl 
+8	0.16667	ideas write interesting future found months raise ten head hire decide young user offer java can't shouldn't bought late wait 
+9	0.16667	capital typical straightforward phrase dinner fight competing quit lying succeeded attitudes man special told ideas individually finished scholarship strategies energetic 
+10	0.16667	work you're big important makes code they're market wouldn't web programs sense group angel times true spend jobs run yahoo 
+11	0.16667	programming funding type meant choose live performance public hope lots slow created city present low he's danger dollars kid growing 
+12	0.16667	don't startups good money users can't working it's there's great didn't languages school kids google point job won't i'd talk 
+13	0.16667	buy investment short expensive return leave phase learning story piece raise stick opinion original disagree individuals developing mathematicians generation i've 
+14	0.16667	generate failed express character secret differences pretend issue develop adult arguably restrictive termsheet forget meaning overlap aircraft retail external absolutely 
+15	0.16667	libraries large departments articles ran spirit funding obstacle carry fragmentation eliminate competitors anomaly assumption subset javascript tied fewer francisco throw 
+16	0.16667	model principle beginning describe jessica algorithm media judgement reward procrastination gap smarter increase perfectly obstacles constraint invent fighting corrupt token 
+17	0.16667	they're idea hackers you'll problem high smart pay question case till fast powerful couple i've talking words test avoid worked 
+18	0.16667	fine giving applications traffic young bring period clean e.g inevitable functions text increases discard publish planning widely writes removed insist 
+19	0.16667	cut grows prefer choosing comments effect distribution similarly ambitious statements high-level funding browser solid patterns finish reasonable organic shared dollar 
+20	0.16667	made thing legal replace believed distinct population involve corporations oneself stories batch food editors note rejection obsolete cheaply refuse unhappy 
+21	0.16667	intelligence team painters perfect filters distraction security schedule prestigious print page immigration larger yield account eat fear length impossible implementing 
+22	0.16667	win extent watch room gates home outcome existing situations perl choices conventional friend brain games credentials closer moral definite skills 
+23	0.16667	bugs ends original convenient corporate disagreement limits techniques evolved button killed monopoly metaphor argue touch explore stuck ita yields sue 
+24	0.16667	reach confident phenomenon judge unusual lives prove combine defined fake importance greater comparatively press access lucky altman regular implement dating 
+25	0.16667	super-angels intended slowly information leading sold makers abstract lawyer hacker's applying mobile term keeping disaster desperate launched suburbia define neutral 
+26	0.16667	practically slightly trevor sergey purpose difficulty low stopped names aware hasn't evidence variables berkeley movies annoying offering driving precisely cheap 
+27	0.16667	eventually taste philosophy plenty month occasionally company's supply surprise marketing optimal suits solutions acceptable odd expertise delay personally ordinarily year 
+28	0.16667	thing find back life large read experience works made friends site data technical ago explain increasingly online turns order inequality 
+29	0.16667	made real cost fund common partly single expected answer happy valuation forced suppose function hadn't bubble sign domain car write 
+
+<800> LL/token: -8.73687
+<810> LL/token: -8.73291
+<820> LL/token: -8.72792
+<830> LL/token: -8.71892
+<840> LL/token: -8.72518
+
+0	0.16667	founders vcs number change thing read person doesn't advantage essay source running news feel stop practice worse difference century age 
+1	0.16667	software means end realize vcs round isn't place simply free succeed quality focus employees remember surprising we'd fail line leave 
+2	0.16667	that's language real college matter invest started spam investor valuable students care stock office figure wrote idea taking ways building 
+3	0.16667	page movie rise sources final intended created territory introduced notation cap opportunities houses eager mixed presented poor faster javascript statistics 
+4	0.16667	people startup it's make things investors time lot hard reason writing programmers problems give design lisp long day rich thought 
+5	0.16667	start years business kind making year successful valley growth plan combinator i've imagine general fundraising hacker art economic power interested 
+6	0.16667	company companies bad problem world i'm fact small deal wealth early they'd you'd stuff microsoft worth tend word applications technology 
+7	0.16667	viaweb form effect days space felt beginning meetings doesn't cars prefer corporate add robert called broken clear europe core deciding 
+8	0.16667	ideas write interesting future raise found starting months can't ten head user shouldn't young java decide bought offer gradually wait 
+9	0.16667	taste capital cares dollar apartment answer policy parallel pull lying greater twenties e.g circumstances public reality casual father hasn't master 
+10	0.16667	work you're big they're important code wrong market wouldn't makes true web times programs common angel spend yahoo email group 
+11	0.16667	programming type funding live performance low choose public lots dollars hope slow subject show he's information growing nature server city 
+12	0.16667	don't startups good money users it's working great didn't can't there's school languages kids point google job talk i'd they'll 
+13	0.16667	short investment expensive return potential phase surprise learning stick bunch young situations probabilities implies interest disagree combine individuals who've iphone 
+14	0.16667	generate costs requires engine phrase hearing channel inequality network fool showed fixing judging failed values channels cold halt destination paris 
+15	0.16667	ultimately share reputation ads remarkable scripting striking address taboos wins dying internal balance ignoring ita arrive pushed informal chunks mainstream 
+16	0.16667	jessica solving classes algorithm leading expenses media functions conversations limited connection perfectly likewise invent obstacle senses stress elite trend solutions 
+17	0.16667	idea hackers you'll high smart case question pay till powerful fast couple they're talking model words i've test avoid worked 
+18	0.16667	topic explicitly fine term traffic watching bring drift token positive fatal putting earnings employer overlooked stripe wearing week mobile sends 
+19	0.16667	articles led breaking reasonable alarming west counterintuitive element distinguish underestimate met successes stupidity finish single demoralized generates nineteenth wild surely 
+20	0.16667	cambridge charge industrial closely sold domain replace cheaply nerd arguments publish leverage york grades percent eminent statistical hapless evolutionary greatly 
+21	0.16667	intelligence team percentage group painters print buy upper mathematicians previous acquirer wise eat barely chances speech combined increased writes component 
+22	0.16667	win books conventional programmer harvard error store credentials problem hits introduce skills mccarthy originally increases extent fire paper moral everyday 
+23	0.16667	philosophy original ends trade monopoly format conclusion lawyer happier measures length distinctive bet medieval advantages bureaucratic demanding sam heroic condition 
+24	0.16667	judge learn phenomenon operate super-angels afraid suck conference prove present systems obsolete implement surely web assumption explains sued dating funding 
+25	0.16667	matters environment distribution bad period show governments encouraging centuries important hands twenty ambition inborn accumulate relentlessly radar publish negotiating group 
+26	0.16667	medium readers thousands rejected precise morning stopped clothes carry power target choices intrinsically annoying hasn't sophisticated learned billion travel ordinary 
+27	0.16667	bugs local gates careful turning sciences shares title flow personally music fraction arguing releases committed expertise text told device driving 
+28	0.16667	find thing life back large works experience ago site friends reading technical explain turns built order what's started launch inequality 
+29	0.16667	made cost fund move expected single approach happy suppose organizations sense function forced factor directly let's lack demand total run 
+
+<850> LL/token: -8.72333
+<860> LL/token: -8.73075
+<870> LL/token: -8.73429
+<880> LL/token: -8.72677
+<890> LL/token: -8.7287
+
+0	0.16667	founders thing number vcs change read person doesn't essay running advantage stop news difference practice current situation age treat today 
+1	0.16667	software means end realize isn't design simply place back email vcs succeed free remember round focus employees single surprising investment 
+2	0.16667	that's language real college spam you'll invest started valuable students matter stock easier care office figure guys ambitious price building 
+3	0.16667	fund changing probabilities draw lawyers suit territory useless clothes economically believing games religion quit junior ads delighted blub alive stream 
+4	0.16667	people it's startup make things investors time lot hard reason writing lisp technology programmers problems give rich learn wanted doesn't 
+5	0.16667	start years business kind making year i've valley growth power plan combinator fundraising imagine attention art general hacker happened raising 
+6	0.16667	company companies problem bad world i'm fact small deal starting wealth early stuff they'd you'd worth word microsoft applications buy 
+7	0.16667	viaweb form effect space act default meetings days deciding earlier handful smart add core robert opinion letting tokens confidence team 
+8	0.16667	ideas write interesting tend we're raise found young future user head hire shouldn't java gradually bought decide months wait return 
+9	0.16667	specific include cares bigger articles policy microsoft completely entire variables proposing here's color houses slow credit elements paperwork account nasty 
+10	0.16667	work you're big they're important makes market wouldn't common wrong web true sense times code run programs angel spend group 
+11	0.16667	programming type funding live made public low choose performance dollars lots he's felt forces show server round present created sitting 
+12	0.16667	don't startups good money users can't there's working great school languages long kids google didn't job successful talk point they'll 
+13	0.16667	short potential effort fear meaning store phase spending positives learned interest systems outsiders heads hubs publish hits retrospect trends notes 
+14	0.16667	information generate late straightforward engine older fine object-oriented achieve parallel alternative clean math stick fortunes media meanness weather recruiting accepted 
+15	0.16667	partly corporate conservative switch fraction talked impressed button treated table internal address memory billion wins ratio actively suggestion forget harmless 
+16	0.16667	jessica super-angels paul company's reasonable machines succeeding phase acquisitions engineers appeal likewise tended drafts shift media mystery domains pleasure shower 
+17	0.16667	idea hackers high case didn't question till smart powerful fast you'll pay couple model talking test words win worked class 
+18	0.16667	war predict opposite topic watching explain suspect inequality ancient political industrial blow largely chance responsible sequoia parts ensure planning mobile 
+19	0.16667	normal marketing choices lies alarming releases led flaws conceal closed leading notation javascript everyday rent doctor army conventions intelligence quality 
+20	0.16667	spread quality management slow reader front arguments background sue stretch increased putting exchange affected lived airbeds establish consist axioms inefficient 
+21	0.16667	city page intelligence windows philosophy food mark organizations conference trade prospect costs invented calls revolution caught security correlation previous expected 
+22	0.16667	classes surprisingly beginning ultimately corpus waiting tradition credentials effects ways skills lawyer lack ajax sends implement labor maximum harvard travel 
+23	0.16667	water advise cambridge ends obsolete offered consequence clever format translate south source thumb complain grade pitch networks presentations surrounded preferred 
+24	0.16667	forced ahead brain percentage thousand apply traffic lucky student freedom front bias direct prepared fails improve efforts oneself someone's square 
+25	0.16667	claim inexperienced period decide measurement algorithm departments expertise discussion he'll sources career stops works specialized explicit blogging sink pattern admirable 
+26	0.16667	lead die badly strategy genuinely reading taking silicon finding careful schools sold acquired text print quiet pretend airbnb artists program 
+27	0.16667	support learning knowledge character turning greatest gates sciences shares advanced picture scripting save moral painters friend engage solid hacker's creation 
+28	0.16667	find life large experience half ago site thing works data technical turns built order started reading discover field source launch 
+29	0.16667	made cost expected poor fund suppose level game factor demand answers basic perfect stand organizations sergey originally identical closer directly 
+
+<900> LL/token: -8.71515
+<910> LL/token: -8.71201
+<920> LL/token: -8.71418
+<930> LL/token: -8.7248
+<940> LL/token: -8.72766
+
+0	0.16667	founders thing vcs number read change person doesn't running essay advantage source stop news worse current practice intelligence university actual 
+1	0.16667	software means design end back realize round simply vcs place succeed remember quality focus research we'd fail investment groups leave 
+2	0.16667	that's language real spam matter you'll students stock valuable office easier figure ambitious price days building guys open form specific 
+3	0.16667	potential driven cambridge undergrads print probabilities granted reading broken runs fortune explanation claiming big unions coast lack painful clothes derived 
+4	0.16667	people it's startup make things investors time lot hard reason writing lisp technology problems programmers give day rich feel wanted 
+5	0.16667	start years business kind making year valley power growth future combinator imagine general i've hacker economic attention interested happened approach 
+6	0.16667	company companies problem bad world i'm fact deal small starting wealth early you'd stuff they'd microsoft worth word applications buy 
+7	0.16667	viaweb pretty plan huge default space act grew story deciding lives haven't decades biggest including opinion domain meetings team conventional 
+8	0.16667	ideas write interesting tend found young decide told head user hire java bought gradually shouldn't return wait steve hours promising 
+9	0.16667	hear smarter earlier thinks street naturally valuations number haven't exciting acquisitions raised door relationship eliminate areas issue avoided successes decreased 
+10	0.16667	work you're big they're important makes market wouldn't common invest programs web code sense true times group run investor yahoo 
+11	0.16667	made programming funding live choose type effect dollars control lots hope created slow summer public sitting performance slightly prefer growing 
+12	0.16667	don't startups good money users can't didn't there's working great they're school languages point kids long google job talk i'd 
+13	0.16667	patent city short fear systems requires felt outsiders demand papers meaning procrastination conclusion feels personally offering sending invented influence trained 
+14	0.16667	store national subset older windows fine helped towns table einstein macro americans hour altair square resist road weather falls quit 
+15	0.16667	boring science creating models decision generating makers brand acceptable bayesian button realizing proportionate desperate fragmentation standardized foot overcome directions interview 
+16	0.16667	phase today lucky appeal offices ultimately who've acquirer enjoy adult pushing biggest microcomputers cash fundamental industries automatically consists strength definite 
+17	0.16667	idea hackers high smart case pay you'll till question powerful fast raise couple i've talking model words test care wrong 
+18	0.16667	revenues opposite led developers alarming surely short responsible creative believed blow mobile protected doctor prevents microcomputer attempt identical random unlike 
+19	0.16667	text literature costs cars small ford arguing mistake proportion picking employer minute wins factors notation balance stupidity track purposes religious 
+20	0.16667	front finding slowly immediately external fly background syntax lead property schleps acquirers tool management travel dating someone's planning likes accept 
+21	0.16667	page philosophy age share situations mine hubs regular previous salary ran weight labor worried ensure connection cofounder author awkward mediocre 
+22	0.16667	classes brain complex industrial late corpus straightforward lost skills fashions mystery required assumption waiting sends dramatic underestimate points evolution month 
+23	0.16667	perfect changing advise aim curve shares advance they'd trick technological combine intended ratio grand shift intellectually mattered vesting ended kerry 
+24	0.16667	ahead mit apps depend visit hierarchy catch meetings complain angel stores reply dealing aristotle mixed fails american detail library chose 
+25	0.16667	leverage prototype yield tokens rise likewise berkeley ground change manager statistical central image scheme oneself stops election arguments unpleasant trolls 
+26	0.16667	strategy lead careful development hub depends facto figured degrees they're mention wind unhappy sequoia spoken protection blogging secret approaches medieval 
+27	0.16667	support learning gates taste knowledge surprisingly humans greatest clean behavior drift dollar finance won measures situation produced helps plenty ugly 
+28	0.16667	find life started large works half ago site experience data technical field turns built order discover develop initially reading launch 
+29	0.16667	fund living cost writers simple rapidly factor topic press i'll expected check advanced sergey comments topics syntax answers statements paint 
+
+<950> LL/token: -8.71172
+<960> LL/token: -8.71574
+<970> LL/token: -8.71379
+<980> LL/token: -8.70972
+<990> LL/token: -8.71439
+
+0	0.16667	founders thing number change vcs person running yahoo source stop force friend worse advantage current practice essay treat wait perl 
+1	0.16667	software means back design end vcs realize round simply life funding remember process quality focus biggest succeed we'd fail leave 
+2	0.16667	that's language real spam matter stock computer easier office guys form ambitious figure price building difference students days open year 
+3	0.16667	inside die derived granted probabilities carefully convinced cambridge one's increases meet west law macro teenage artist naive senses pinch security 
+4	0.16667	people it's startup make things investors time lot hard doesn't writing reason problems technology give programmers won't rich day lisp 
+5	0.16667	start business years kind making languages valley power year i've future combinator fundraising that's general imagine approach happened century economic 
+6	0.16667	company companies problem world i'm bad fact starting small deal early they'd wealth isn't word you'd stuff applications worth buy 
+7	0.16667	plan pretty viaweb huge risk thing default haven't principle meetings they've grew small average conventional related complex papers succeeding pages 
+8	0.16667	ideas write tend interesting found half young decide user research head hire weren't you're increasingly java bought gradually city promising 
+9	0.16667	sales earlier beat continue street account enjoy technological network responsibility regard draw killed calling selection widely correctly replace defined decreased 
+10	0.16667	work you're big they're important makes market wouldn't common code invest web wrong times sense run investor angel group true 
+11	0.16667	made programming type live effect control choose public dollars groups lots hope development summer felt began prefer sitting growing original 
+12	0.16667	don't startups good money users can't didn't there's working great they're school long point google talk i'd successful job they'll 
+13	0.16667	short launch feels fear student agree server-based identical disagree systems procrastination prestigious e.g survive larger mode influence browser twenty twenties 
+14	0.16667	act store future fine national typical format unions hacker hour coast exception texts proof lunch mysterious pattern silicon cared brains 
+15	0.16667	steve brand property bank movie mit decreasing yields drive importantly editors david amounts statement turns blogging zero-sum grown education spot 
+16	0.16667	empirically losing fraction generating automatically sending moved applied internal dev worry amazon feet creative explore hour definition altair recruiting javascript 
+17	0.16667	idea hackers you'll thought smart pay question case till powerful raise fast couple high talking i've care words win avoid 
+18	0.16667	demand stores suddenly page fairly accept startups reality bug doctor generates extract claiming marginal start kerry mails pushing accumulated equation 
+19	0.16667	software reporters literature definite brain ancient familiar throwaway measuring earliest imitating fifty funding dangerous fundamental leaders breaking pleasure distinct origins 
+20	0.16667	considered front designing finding previous miss background brain graduate awkward cheaply external models meaning seats eating asks election story sentences 
+21	0.16667	who've surely evil regular phone manage intended speak worried computers author built corporate mathematicians color sam ignoring mobile prevents bits 
+22	0.16667	investment experience shouldn't page situations industrial fashions ahead trust equal wasting believing practice hadn't he'll einstein sophisticated disputes mouth appealing 
+23	0.16667	structure hit changing perfect function combine advise insiders task cofounder prototype shares lazy organization depending defining object-oriented readers collection quiet 
+24	0.16667	university outcome versions implement limits counterintuitive screen hierarchy attitude stripe quit strange intellectually modern stages aristotle mathematical rapid statistics executive 
+25	0.16667	venture novels ugly admissions involved meet suggest leaving innocent fragmentation text addictive acquirer won constrained balance attacking energetic overlap barely 
+26	0.16667	depends support death lead positives option benefit desire theoretical rational prices compare discard lying deliberately paperwork hub ibm everyone's develop 
+27	0.16667	learning determined basic local edge taste aim direct possibly hundreds alternative exercise degrees inevitable bias constant existence detail environment advertising 
+28	0.16667	find started large ago site life data field experience surprising works technical reasons math potential weeks save trend reading initially 
+29	0.16667	fund essay writers living prevent rapidly level philosophy syntax factor topic check mind career batch secret algorithm conference political influenced 
+
+[beta: 0.01619] 
+<1000> LL/token: -8.70932
+
+Total time: 1 minutes 12 seconds
+15:45:27 patrick@linawesome mallet$ OK, that looks good.^C
+16:07:53 patrick@linawesome mallet$ exit
+Script done on Mon 22 Feb 2016 04:07:55 PM PST
