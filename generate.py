@@ -27,6 +27,8 @@ from sentence_generator import *                            # https://github.com
 normal_tags                     = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
 patrick_logger.verbosity_level  = 3
 the_brainwave                   = ''
+allow_gratitude                 = True
+allow_notes                     = True
 force_gratitude                 = False
 force_notes                     = False
 
@@ -187,10 +189,10 @@ if __name__ == "__main__":
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
-    if force_notes or random.random() <= .45:
+    if allow_notes and (force_notes or random.random() <= .45):
         the_brainwave = the_brainwave + '\n' + get_notes()
     
-    if force_gratitude or random.random() <= 1 / 3 :
+    if allow_gratitude and (force_gratitude or random.random() <= 1 / 3):
         the_brainwave = the_brainwave + '\n' + get_thanks()
 
     patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
