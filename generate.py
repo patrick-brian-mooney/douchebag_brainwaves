@@ -175,7 +175,7 @@ def get_thanks():
 
     ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
     ret = ret + ' ' + random.choice(['for their feedback on these thoughts.', 'for inviting me to speak.',
-       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.'])
+       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.', 'for sparking my interest in this topic.'])
     return ret
 
 if __name__ == "__main__":
