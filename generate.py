@@ -13,10 +13,10 @@ Github repo:
 import random, pprint, sys, json, urllib, requests
 from urllib.request import urlopen
 
-import nltk             # http://www.nltk.org/; sudo pip install -U nltk
+import nltk                 # http://www.nltk.org/; sudo pip install -U nltk
 
-import patrick_logger    # From https://github.com/patrick-brian-mooney/personal-library
-import social_media      # From https://github.com/patrick-brian-mooney/personal-library
+import patrick_logger       # From https://github.com/patrick-brian-mooney/personal-library
+import social_media         # From https://github.com/patrick-brian-mooney/personal-library
 from social_media_auth import douchebag_brainwaves_client
 
 sys.path.append('/DouchebagBrainwaves/markov_sentence_generator/')
@@ -33,7 +33,7 @@ force_gratitude                 = False
 force_notes                     = False
 
 #File locations
-main_chains_file                = '/DouchebagBrainwaves/essays/graham.3.pkl'
+main_chains_file                = '/DouchebagBrainwaves/essays/graham.4.pkl'
 title_chains_file               = '/DouchebagBrainwaves/essays/titles.1.pkl'
 actual_graham_titles_path       = '/DouchebagBrainwaves/essays/titles.txt'
 gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
