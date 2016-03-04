@@ -27,13 +27,13 @@ from sentence_generator import *                            # https://github.com
 normal_tags                     = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
 patrick_logger.verbosity_level  = 3
 the_brainwave                   = ''
-allow_gratitude                 = True
+allow_gratitude                 = False
 allow_notes                     = True
 force_gratitude                 = False
 force_notes                     = False
 
 #File locations
-main_chains_file                = '/DouchebagBrainwaves/essays/graham.4.pkl'
+main_chains_file                = '/DouchebagBrainwaves/essays/graham.3.pkl'
 title_chains_file               = '/DouchebagBrainwaves/essays/titles.1.pkl'
 actual_graham_titles_path       = '/DouchebagBrainwaves/essays/titles.txt'
 gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
