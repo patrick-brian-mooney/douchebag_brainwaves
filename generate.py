@@ -27,7 +27,7 @@ from sentence_generator import *                            # https://github.com
 normal_tags                     = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
 patrick_logger.verbosity_level  = 3
 the_brainwave                   = ''
-allow_gratitude                 = False
+allow_gratitude                 = True
 allow_notes                     = True
 force_gratitude                 = False
 force_notes                     = False
@@ -99,22 +99,24 @@ def get_a_title(the_brainwave):
     topical_starts = random.choice(graham_topics)
     
     """Previous titles, no longer in use:
-      lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: 'REASONS WHY STARTUPS FAIL',
       lambda: "WHAT'S WRONG THESE DAYS WITH %s" % get_a_noun(the_brainwave),
-      lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
     """
     possible_titles = [
       lambda: 'THE COURAGE OF %s' % get_a_noun(the_brainwave),
       lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
+      lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=2, paragraph_break_probability=0).strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
       lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
       lambda: "WORK ETHIC AND %s" % get_a_noun(the_brainwave),
       lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
+      lambda: "HERE'S WHAT I JUST REALIZED ABOUT %s" % get_a_noun(the_brainwave),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),

@@ -2,7 +2,7 @@
 
 [Paul Graham](https://en.wikipedia.org/wiki/Paul_Graham_(computer_programmer)) is a busy man. When I saw [how many documents](http://paulgraham.com/articles.html) are posted on his website under the heading "Essays," I thought, "Wow! This here entrepreneur sits down and writes out a screed every single time he has a brainwave! What a hero of industry! What an American! What a talented writer!"
 
-But then I remembered again how busy he is with his many socially important projects, and it bothered me that he probably doesn't have the time to have as many brainwaves as the world would benefit from him having. So I trained a Python script on his existing corpus of brilliance and use it to crank out new brainwaves for the benefit of all of us. I know you can't just automate genius, but at least this gets us *something*.
+But then I remembered again how busy he is with his many socially important projects involving giving money to the technically proficient offspring of wealthy people, and it bothered me that he probably doesn't have the time to have as many brainwaves as the world would benefit from him producing. So I trained a Python script on his existing corpus of brilliance and I use it to crank out new brainwaves for the benefit of all of us. I know *you can't just automate genius*, but at least this gets us *something*.
 
 You can read these brainwaves at [https://douchebagbrainwaves.tumblr.com/](DouchebagBrainwaves.tumblr.com).
 
