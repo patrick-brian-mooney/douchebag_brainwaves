@@ -10,7 +10,7 @@ Github repo:
     https://github.com/patrick-brian-mooney/douchebag_brainwaves
 """
 
-import random, pprint, sys, json, urllib, requests
+import random, pprint, sys, json, urllib, requests, glob
 from urllib.request import urlopen
 
 import nltk                 # http://www.nltk.org/; sudo pip install -U nltk
@@ -28,10 +28,11 @@ patrick_logger.verbosity_level  = 3
 the_brainwave                   = ''
 allow_gratitude                 = True
 allow_notes                     = True
-force_gratitude                 = True
-force_notes                     = True
+force_gratitude                 = False
+force_notes                     = False
 
 #File locations
+graham_essays_path              = '/DouchebagBrainwaves/essays/indiv/'
 main_chains_file                = '/DouchebagBrainwaves/essays/graham.3.pkl'
 title_chains_file               = '/DouchebagBrainwaves/essays/titles.1.pkl'
 actual_graham_titles_path       = '/DouchebagBrainwaves/essays/titles.txt'
@@ -39,8 +40,9 @@ gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
 notes_chains_file               = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
 # OK, read the primary chains into memory
+which_essays = random.sample(glob.glob('%s*txt' % graham_essays_path), random.randint(10,30))
 main_genny = sg.TextGenerator()
-main_genny.chains.read_chains(main_chains_file)
+main_genny.train(which_essays, markov_length=3)
 
 # Here's a list of 30 topics that MALLET found in Paul Graham's essays, after pruning of some common words that slipped through.
 graham_topics = [
