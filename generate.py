@@ -19,8 +19,7 @@ import patrick_logger       # From https://github.com/patrick-brian-mooney/perso
 import social_media         # From https://github.com/patrick-brian-mooney/personal-library
 from social_media_auth import douchebag_brainwaves_client
 
-sys.path.append('/DouchebagBrainwaves/markov_sentence_generator/')
-from sentence_generator import *                            # https://github.com/patrick-brian-mooney/markov-sentence-generator
+import sentence_generator as sg     # https://github.com/patrick-brian-mooney/markov-sentence-generator
 
 
 # Parameter declarations
@@ -29,8 +28,8 @@ patrick_logger.verbosity_level  = 3
 the_brainwave                   = ''
 allow_gratitude                 = True
 allow_notes                     = True
-force_gratitude                 = False
-force_notes                     = False
+force_gratitude                 = True
+force_notes                     = True
 
 #File locations
 main_chains_file                = '/DouchebagBrainwaves/essays/graham.3.pkl'
@@ -40,9 +39,10 @@ gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
 notes_chains_file               = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
 # OK, read the primary chains into memory
-the_markov_length, the_starts, the_mapping = read_chains(main_chains_file)
+main_genny = sg.TextGenerator()
+main_genny.chains.read_chains(main_chains_file)
 
-# Here's a list of 30 topics that MALLET found in Paul Graham's essays, with pruning of some common words that slipped through.
+# Here's a list of 30 topics that MALLET found in Paul Graham's essays, after pruning of some common words that slipped through.
 graham_topics = [
    ['founders', 'thing', 'number', 'change', 'VCs', 'person', 'running', 'yahoo', 'source', 'stop', 'advantage', 'force', 'friend', 'worse', 'current', 'practice', 'news', 'wait', 'treat', 'Perl'],
    ['software', 'means', 'back', 'design', 'VCs', 'end', 'realize', 'round', 'simply', 'funding', 'life', 'remember', 'quality', 'focus', 'process', 'biggest', 'succeed', 'fail', 'American'],
@@ -89,9 +89,10 @@ def get_fake_graham_title():
     ret = "Apple's Mistake"     # Start with a title that IS in Graham's list of titles.
     with open(actual_graham_titles_path) as actual_graham_titles_file:
         actual_graham_titles = actual_graham_titles_file.read()
-    title_m_length, title_starts, title_mapping = read_chains(title_chains_file)
+    titles_genny = sg.TextGenerator()
+    titles_genny.chains.read_chains(title_chains_file)
     while ''.join([x for x in ret.lower() if x.isalnum()]) in ''.join([x for x in actual_graham_titles.lower() if x.isalnum()]):
-        ret = gen_text(title_mapping, title_starts, markov_length=title_m_length, sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
+        ret = titles_genny.gen_text(sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
     return ret
 
 def get_a_title(the_brainwave):
@@ -108,15 +109,16 @@ def get_a_title(the_brainwave):
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
       lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
       lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
-      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
-      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
-      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
-      lambda: gen_text(the_mapping, topical_starts, markov_length=the_markov_length, sentences_desired=2, paragraph_break_probability=0).strip()[:-1],
+      lambda: main_genny.gen_text().strip()[:-1],
+      lambda: main_genny.gen_text().strip()[:-1],
+      lambda: main_genny.gen_text().strip()[:-1],
+      lambda: main_genny.gen_text().strip()[:-1],
       lambda: "OK, I'LL TELL YOU YOU ABOUT %s" % get_a_noun(the_brainwave),
       lambda: "STARTUPS AND %s" % get_a_noun(the_brainwave),
       lambda: "WORK ETHIC AND %s" % get_a_noun(the_brainwave),
       lambda: "I'VE BEEN PONDERING %s" % get_a_noun(the_brainwave),
       lambda: "HERE'S WHAT I JUST REALIZED ABOUT %s" % get_a_noun(the_brainwave),
+      lambda: "WHY I'M SMARTER THAN %s" % get_a_noun(the_brainwave),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
       lambda: get_fake_graham_title(),
@@ -141,10 +143,11 @@ def get_some_tags(the_brainwave):
 
 def get_notes():
     """Get a set of notes for the end of the essay."""
-    notes_m_length, notes_starts, notes_mapping = read_chains(notes_chains_file)
-    ret = "<p>Notes</p>\n<ol>\n"
+    notes_genny = sg.TextGenerator()
+    notes_genny.chains.read_chains(notes_chains_file)
+    ret = "<h2>Notes</h2>\n<ol>\n"
     for which_note in range(random.randint(1,15)):
-        ret = ret + '<li>%s</li>\n' % gen_text(notes_mapping, notes_starts, notes_m_length, random.randint(1, 4), paragraph_break_probability=0)
+        ret = ret + '<li>%s</li>\n' % notes_genny.gen_text(sentences_desired=random.randint(1, 4), paragraph_break_probability=0)
     ret = ret + "</ol>\n"
     return ret
 
@@ -177,7 +180,7 @@ def get_thanks():
 
     ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
     ret = ret + ' ' + random.choice(['for their feedback on these thoughts.', 'for inviting me to speak.',
-       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.', 'for sparking my interest in this topic.'])
+       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.', 'for sparking my interest in this topic.', 'for smelling so good.', 'for the lulz.'])
     return ret
 
 if __name__ == "__main__":
@@ -186,7 +189,7 @@ if __name__ == "__main__":
     for which_para in range(random.randint(2,8)):
         paragraph_length = random.choice(list(range(7, 12)))
         patrick_logger.log_it('      Getting %d sentences.' % paragraph_length)
-        the_brainwave = the_brainwave + gen_text(the_mapping, the_starts, the_markov_length, paragraph_length, paragraph_break_probability=0) + '\n'
+        the_brainwave = the_brainwave + main_genny.gen_text(sentences_desired=paragraph_length, paragraph_break_probability=0) + '\n'
 
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
