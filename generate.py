@@ -109,7 +109,7 @@ def get_a_title(the_brainwave):
       lambda: 'THE COURAGE OF %s' % get_a_noun(the_brainwave),
       lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
-      lambda: gen_text(the_mapping, the_starts, markov_length=the_markov_length, sentences_desired=1, paragraph_break_probability=0).strip()[:-1],
+      lambda: main.genny.gen_text().strip()[:-1],
       lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
       lambda: main_genny.gen_text().strip()[:-1],
       lambda: main_genny.gen_text().strip()[:-1],
