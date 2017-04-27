@@ -19,7 +19,7 @@ import patrick_logger       # From https://github.com/patrick-brian-mooney/perso
 import social_media         # From https://github.com/patrick-brian-mooney/personal-library
 from social_media_auth import douchebag_brainwaves_client
 
-import sentence_generator as sg     # https://github.com/patrick-brian-mooney/markov-sentence-generator
+import text_generator as tg     # https://github.com/patrick-brian-mooney/markov-sentence-generator
 
 
 # Parameter declarations
@@ -41,7 +41,7 @@ notes_chains_file               = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
 # OK, read the primary chains into memory
 which_essays = random.sample(glob.glob('%s*txt' % graham_essays_path), random.randint(10,30))
-main_genny = sg.TextGenerator()
+main_genny = tg.TextGenerator()
 main_genny.train(which_essays, markov_length=3)
 
 # Here's a list of 30 topics that MALLET found in Paul Graham's essays, after pruning of some common words that slipped through.
@@ -91,7 +91,7 @@ def get_fake_graham_title():
     ret = "Apple's Mistake"     # Start with a title that IS in Graham's list of titles.
     with open(actual_graham_titles_path) as actual_graham_titles_file:
         actual_graham_titles = actual_graham_titles_file.read()
-    titles_genny = sg.TextGenerator()
+    titles_genny = tg.TextGenerator()
     titles_genny.chains.read_chains(title_chains_file)
     while ''.join([x for x in ret.lower() if x.isalnum()]) in ''.join([x for x in actual_graham_titles.lower() if x.isalnum()]):
         ret = titles_genny.gen_text(sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
@@ -145,7 +145,7 @@ def get_some_tags(the_brainwave):
 
 def get_notes():
     """Get a set of notes for the end of the essay."""
-    notes_genny = sg.TextGenerator()
+    notes_genny = tg.TextGenerator()
     notes_genny.chains.read_chains(notes_chains_file)
     ret = "<h2>Notes</h2>\n<ol>\n"
     for which_note in range(random.randint(1,15)):
