@@ -189,7 +189,7 @@ if __name__ == "__main__":
     patrick_logger.log_it("INFO: Everything's set up, let's go...")
 
     for which_para in range(random.randint(2,8)):
-        paragraph_length = random.choice(list(range(7, 12)))
+        paragraph_length = random.randint(7, 12)
         patrick_logger.log_it('      Getting %d sentences.' % paragraph_length)
         the_brainwave = the_brainwave + main_genny.gen_text(sentences_desired=paragraph_length, paragraph_break_probability=0) + '\n'
 
@@ -208,7 +208,8 @@ if __name__ == "__main__":
     patrick_logger.log_it('INFO: tags are: %s' % brainwave_tags, 2)
 
     the_brainwave = '\n'.join([ '<p>%s</p>' % x if not x.strip().startswith('<') else x for x in the_brainwave.split('\n') ])
-    the_status = social_media.tumblr_text_post(douchebag_brainwaves_client, brainwave_tags, the_title, the_brainwave)
+    the_status, the_tumblr_data = social_media.tumblr_text_post(douchebag_brainwaves_client, brainwave_tags, the_title, the_brainwave)
     patrick_logger.log_it('INFO: the_status is: ' + pprint.pformat(the_status), 2)
+    patrick_logger.log_it('INFO: the_tumblr_data is: ' + pprint.pformat(the_tumblr_data), 2)
 
     patrick_logger.log_it('INFO: We\'re done', 2)
