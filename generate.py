@@ -29,7 +29,7 @@ the_brainwave                   = ''
 allow_gratitude                 = True
 allow_notes                     = True
 force_gratitude                 = False
-force_notes                     = False
+force_notes                     = True
 
 #File locations
 graham_essays_path              = '/DouchebagBrainwaves/essays/indiv/'
@@ -143,15 +143,40 @@ def get_some_tags(the_brainwave):
     tags = ', '.join(random.sample(alphanumeric, how_many))
     return tags
 
-def get_notes():
-    """Get a set of notes for the end of the essay."""
+def add_notes(the_essay):
+    """Add a set of note references (raised endnote numbers) into the text of the
+    brainwave, then add a set of notes to the end of the essay.
+    
+    Return the entire modified essay.
+    """
+    # First, split the sentence into sentences, preserving paragraph breaks
+    sents_in_brainwave = [][:]
+    paragraphs = the_essay.strip().split('\n')
+    for p in paragraphs:
+        sents_in_brainwave += nltk.sent_tokenize(p)
+        sents_in_brainwave[-1] = sents_in_brainwave[-1] + '\n'
+        
+    # Next, pick how many notes there will be.
+    num_notes = random.randint(1, len(sents_in_brainwave) // 3)  # No more than one end note for every three sentences
+    
+    # Then, insert note references into the text.
+    note_locations = sorted(random.sample(list(range(1, 1 + len(sents_in_brainwave))), num_notes))
+    for which_note, which_sentence in enumerate(note_locations):
+        if sents_in_brainwave[which_sentence].endswith('\n'):
+            sents_in_brainwave[which_sentence] = sents_in_brainwave[which_sentence].strip() + "<sup>%d</sup>\n" % (1 + which_note)
+        else:
+            sents_in_brainwave[which_sentence] = sents_in_brainwave[which_sentence] + "<sup>%d</sup>" % (1 + which_note)
+    the_essay = ' '.join(sents_in_brainwave)
+    
+    # Finally, generate some notes to add to the end of the essay.
     notes_genny = tg.TextGenerator()
     notes_genny.chains.read_chains(notes_chains_file)
-    ret = "<h2>Notes</h2>\n<ol>\n"
-    for which_note in range(random.randint(1,15)):
-        ret = ret + '<li>%s</li>\n' % notes_genny.gen_text(sentences_desired=random.randint(1, 4), paragraph_break_probability=0)
-    ret = ret + "</ol>\n"
-    return ret
+    notes = "<h2>Notes</h2>\n<ol>\n"
+    for which_note in range(num_notes):
+        notes = notes + '<li>%s</li>\n' % notes_genny.gen_text(sentences_desired=random.randint(1, 4), paragraph_break_probability=0)
+    notes = notes + "</ol>\n"
+    
+    return the_essay + '\n' + notes
 
 def get_thanks():
     """Get a set of credits for people who helped Virtual Paul Graham to write this set of thoughts"""
@@ -196,8 +221,8 @@ if __name__ == "__main__":
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
-    if allow_notes and (force_notes or random.random() <= .45):
-        the_brainwave = the_brainwave + '\n' + get_notes()
+    if allow_notes and (force_notes or random.random() <= .35):
+        the_brainwave = add_notes(the_brainwave)
     
     if allow_gratitude and (force_gratitude or random.random() <= 1 / 3):
         the_brainwave = the_brainwave + '\n' + get_thanks()
