@@ -29,7 +29,7 @@ the_brainwave                   = ''
 allow_gratitude                 = True
 allow_notes                     = True
 force_gratitude                 = False
-force_notes                     = True
+force_notes                     = False
 
 #File locations
 graham_essays_path              = '/DouchebagBrainwaves/essays/indiv/'
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
     
-    if allow_notes and (force_notes or random.random() <= .35):
+    if allow_notes and (force_notes or random.random() <= .45):
         the_brainwave = add_notes(the_brainwave)
     
     if allow_gratitude and (force_gratitude or random.random() <= 1 / 3):
