@@ -109,7 +109,7 @@ def get_a_title(the_brainwave):
       lambda: 'THE COURAGE OF %s' % get_a_noun(the_brainwave),
       lambda: 'EVERY FOUNDER SHOULD KNOW ABOUT %s' % get_a_noun(the_brainwave),
       lambda: 'YOU GUYS I JUST THOUGHT OF THIS',
-      lambda: main.genny.gen_text().strip()[:-1],
+      lambda: main_genny.gen_text().strip()[:-1],
       lambda: "WHAT NO ONE UNDERSTANDS ABOUT %s" % get_a_noun(the_brainwave),
       lambda: main_genny.gen_text().strip()[:-1],
       lambda: main_genny.gen_text().strip()[:-1],
@@ -207,7 +207,8 @@ def get_thanks():
 
     ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
     ret = ret + ' ' + random.choice(['for their feedback on these thoughts.', 'for inviting me to speak.',
-       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.', 'for sparking my interest in this topic.', 'for smelling so good.', 'for the lulz.'])
+       'for reading a previous draft.', 'for sharing their expertise on this topic.', 'for putting up with me.', 'for sparking my interest in this topic.',
+       'for smelling so good.', 'for the lulz.'])
     return ret
 
 if __name__ == "__main__":
