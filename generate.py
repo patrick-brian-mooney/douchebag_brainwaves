@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.5
 """Posts to the DouchebagBrainwaves Tumblr account, much like my other
 automatically generated text accounts.
 
@@ -186,7 +186,7 @@ def get_thanks():
     with open(gratitude_path) as gratitude_file:
         actually_thanked_by_graham = [ the_person.strip() for the_person in gratitude_file.readlines() ]
     patrick_logger.log_it('INFO: OK, we loaded the list of people Paul Graham has actually thanked.', 3)
-    
+
     # OK, now get a list of (previously) hot topics
     # Seems that 1 August 2015 is the first day for which this API returns data. I'm OK with not looking at the 31st of any month. 
     try:
@@ -202,7 +202,7 @@ def get_thanks():
     except Exception as e:
         patrick_logger.log_it('INFO: exception %s occurred' % e, 1)
         real_wp_articles = []
-    
+
     grateful_to = list(set(random.sample(actually_thanked_by_graham + real_wp_articles, random.randint(3,10))))
 
     ret = 'Thanks to ' + ', '.join(grateful_to[:-1]) + ', and ' + grateful_to[-1]
@@ -221,15 +221,15 @@ if __name__ == "__main__":
 
     the_title = get_a_title(the_brainwave)
     patrick_logger.log_it('INFO: Title is: %s' % the_title)
-    
+
     if allow_notes and (force_notes or random.random() <= .45):
         the_brainwave = add_notes(the_brainwave)
-    
+
     if allow_gratitude and (force_gratitude or random.random() <= 1 / 3):
         the_brainwave = the_brainwave + '\n' + get_thanks()
 
     patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
-    
+
     brainwave_tags = normal_tags + get_some_tags(the_brainwave)
     patrick_logger.log_it('INFO: tags are: %s' % brainwave_tags, 2)
 
