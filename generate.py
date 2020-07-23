@@ -15,21 +15,25 @@ from urllib.request import urlopen
 
 import nltk                 # http://www.nltk.org/; sudo pip install -U nltk
 
-import patrick_logger       # From https://github.com/patrick-brian-mooney/personal-library
+import logger       # From https://github.com/patrick-brian-mooney/personal-library
 import social_media         # From https://github.com/patrick-brian-mooney/personal-library
-from social_media_auth import douchebag_brainwaves_client
 
 import text_generator as tg     # https://github.com/patrick-brian-mooney/markov-sentence-generator
 
 
+with open('/social_media_auth.json', encoding='utf-8') as auth_file:
+    douchebag_brainwaves_client = social_media.Tumblpy_from_dict(json.loads(auth_file.read())['douchebag_brainwaves_client'])
+
+
 # Parameter declarations
 normal_tags                     = 'automatically generated text, Markov chains, Paul Graham, Python, Patrick Mooney, '
-patrick_logger.verbosity_level  = 3
+logger.verbosity_level  = 3
 the_brainwave                   = ''
 allow_gratitude                 = True
 allow_notes                     = True
 force_gratitude                 = False
 force_notes                     = False
+
 
 #File locations
 graham_essays_path              = '/DouchebagBrainwaves/essays/indiv/'
@@ -39,10 +43,12 @@ actual_graham_titles_path       = '/DouchebagBrainwaves/essays/titles.txt'
 gratitude_path                  = '/DouchebagBrainwaves/essays/gratitude.txt'
 notes_chains_file               = '/DouchebagBrainwaves/essays/notes.2.pkl'
 
+
 # OK, read the primary chains into memory
 which_essays = random.sample(glob.glob('%s*txt' % graham_essays_path), random.randint(10,30))
 main_genny = tg.TextGenerator()
 main_genny.train(which_essays, markov_length=3)
+
 
 # Here's a list of 30 topics that MALLET found in Paul Graham's essays, after pruning of some common words that slipped through.
 graham_topics = [
@@ -78,6 +84,7 @@ graham_topics = [
    ['fund', 'essay', 'writers', 'living', 'prevent', 'rapidly', 'philosophy', 'level', 'syntax', 'factor', 'check', 'mind', 'topic', 'career', 'batch', 'secret', 'conference', 'behavior', 'influenced', 'technologies']
 ]
 
+
 def get_a_noun(the_brainwave):
     """Get a random noun that appears in the text"""
     tokens = nltk.word_tokenize(the_brainwave)
@@ -85,6 +92,7 @@ def get_a_noun(the_brainwave):
     nouns = [word for word,pos in tagged if (pos == 'NN' or pos == 'NNP' or pos == 'NNS' or pos == 'NNPS')]
     alphanumeric = [word for word in nouns if word.isalnum()]
     return random.choice(alphanumeric)
+
 
 def get_fake_graham_title():
     """Generate a fake title based on the corpus only of Graham's titles; reject it if it's an actual Graham title."""
@@ -97,9 +105,10 @@ def get_fake_graham_title():
         ret = titles_genny.gen_text(sentences_desired=1, paragraph_break_probability=0).upper().strip()[:-1]
     return ret
 
+
 def get_a_title(the_brainwave):
     """Gets a title for this particular Paul Graham-style brainwave."""
-    topical_starts = random.choice(graham_topics)
+    topical_starts = random.choice(graham_topics)           #FIXME: use these!
     
     """Previous titles, no longer in use:
       lambda: 'REASONS WHY STARTUPS FAIL',
@@ -129,6 +138,7 @@ def get_a_title(the_brainwave):
     ]
     return random.choice(possible_titles)().upper()
 
+
 def get_some_tags(the_brainwave):
     """Gets some random tags to add to the standard tags."""
 
@@ -142,6 +152,7 @@ def get_some_tags(the_brainwave):
     how_many = random.randint(3, maxx)
     tags = ', '.join(random.sample(alphanumeric, how_many))
     return tags
+
 
 def add_notes(the_essay):
     """Add a set of note references (raised endnote numbers) into the text of the
@@ -178,6 +189,7 @@ def add_notes(the_essay):
     
     return the_essay + '\n' + notes
 
+
 def get_thanks():
     """Get a set of credits for people who helped Virtual Paul Graham to write this set of thoughts"""
     wp_specials = ('Special:', 'Wikipedia:', 'Category:', 'Template:', 'File:', 'Help:', 'Portal:', 'User:',
@@ -185,22 +197,22 @@ def get_thanks():
     # First, get a list of people who were actually thanked by actual Paul Graham
     with open(gratitude_path) as gratitude_file:
         actually_thanked_by_graham = [ the_person.strip() for the_person in gratitude_file.readlines() ]
-    patrick_logger.log_it('INFO: OK, we loaded the list of people Paul Graham has actually thanked.', 3)
+    logger.log_it('INFO: OK, we loaded the list of people Paul Graham has actually thanked.', 3)
 
     # OK, now get a list of (previously) hot topics
     # Seems that 1 August 2015 is the first day for which this API returns data. I'm OK with not looking at the 31st of any month. 
     try:
         which_date = '2015/%02d/%02d/' % (random.randint(8,12), random.randint(1,30))
-        patrick_logger.log_it("INFO: we're loading nouns from Wikipedia's top 1000 articles from %s" % which_date, 3)
+        logger.log_it("INFO: we're loading nouns from Wikipedia's top 1000 articles from %s" % which_date, 3)
         wp_response = urlopen('http://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/2015/10/10/' % which_date)
         wp_data = wp_response.read().decode()
         wp_dict = json.loads(wp_data)
-        patrick_logger.log_it("INFO: we loaded and parsed the relevant JSON data from Wikipedia.", 3)
+        logger.log_it("INFO: we loaded and parsed the relevant JSON data from Wikipedia.", 3)
         wp_articles = [ wp_dict['items'][0]['articles'][x]['article'] for x in range(len(wp_dict['items'][0]['articles'])) ]
         real_wp_articles = [x.replace('_', ' ') for x in wp_articles if not x.startswith(wp_specials)]
-        patrick_logger.log_it("INFO: There are %d 'real' articles from that date" % len(real_wp_articles), 3)
+        logger.log_it("INFO: There are %d 'real' articles from that date" % len(real_wp_articles), 3)
     except Exception as e:
-        patrick_logger.log_it('INFO: exception %s occurred' % e, 1)
+        logger.log_it('INFO: exception %s occurred' % e, 1)
         real_wp_articles = []
 
     grateful_to = list(set(random.sample(actually_thanked_by_graham + real_wp_articles, random.randint(3,10))))
@@ -211,16 +223,17 @@ def get_thanks():
        'for smelling so good.', 'for the lulz.'])
     return ret
 
+
 if __name__ == "__main__":
-    patrick_logger.log_it("INFO: Everything's set up, let's go...")
+    logger.log_it("INFO: Everything's set up, let's go...")
 
     for which_para in range(random.randint(2,8)):
         paragraph_length = random.randint(7, 12)
-        patrick_logger.log_it('      Getting %d sentences.' % paragraph_length)
+        logger.log_it('      Getting %d sentences.' % paragraph_length)
         the_brainwave = the_brainwave + main_genny.gen_text(sentences_desired=paragraph_length, paragraph_break_probability=0) + '\n'
 
     the_title = get_a_title(the_brainwave)
-    patrick_logger.log_it('INFO: Title is: %s' % the_title)
+    logger.log_it('INFO: Title is: %s' % the_title)
 
     if allow_notes and (force_notes or random.random() <= .45):
         the_brainwave = add_notes(the_brainwave)
@@ -228,14 +241,14 @@ if __name__ == "__main__":
     if allow_gratitude and (force_gratitude or random.random() <= 1 / 3):
         the_brainwave = the_brainwave + '\n' + get_thanks()
 
-    patrick_logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
+    logger.log_it("INFO: here's the brainwave:\n\n%s" % the_brainwave, 2)
 
     brainwave_tags = normal_tags + get_some_tags(the_brainwave)
-    patrick_logger.log_it('INFO: tags are: %s' % brainwave_tags, 2)
+    logger.log_it('INFO: tags are: %s' % brainwave_tags, 2)
 
     the_brainwave = '\n'.join([ '<p>%s</p>' % x if not x.strip().startswith('<') else x for x in the_brainwave.split('\n') ])
     the_status, the_tumblr_data = social_media.tumblr_text_post(douchebag_brainwaves_client, brainwave_tags, the_title, the_brainwave)
-    patrick_logger.log_it('INFO: the_status is: ' + pprint.pformat(the_status), 2)
-    patrick_logger.log_it('INFO: the_tumblr_data is: ' + pprint.pformat(the_tumblr_data), 2)
+    logger.log_it('INFO: the_status is: ' + pprint.pformat(the_status), 2)
+    logger.log_it('INFO: the_tumblr_data is: ' + pprint.pformat(the_tumblr_data), 2)
 
-    patrick_logger.log_it('INFO: We\'re done', 2)
+    logger.log_it('INFO: We\'re done', 2)
