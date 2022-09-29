@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/DouchebagBrainwaves/bin/python3
 """Posts to the DouchebagBrainwaves Tumblr account, much like my other
 automatically generated text accounts.
 
