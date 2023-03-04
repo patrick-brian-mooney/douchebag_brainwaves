@@ -7,7 +7,7 @@ joblib==1.2.0
 mltk==0.0.5
 nltk==3.7
 numpy==1.23.3
-oauthlib==3.2.1
+oauthlib==3.2.2
 pandas==1.5.0
 python-dateutil==2.8.2
 python-tumblpy==1.1.4
